@@ -190,3 +190,74 @@ Manifest SHA-256: `6fa775a973f80466a6c1862b351054a3531f71569b0e6666ce0b1cdd1a4de
 
 - A long multi-file bash heredoc failed with `unexpected EOF while looking for matching '`. The fix was to write files with the editor tool instead of shell heredocs.
 - `| head` on the lock re-run caused an EPIPE crash after the manifest had been written. Harmless (the manifest hash was unchanged), but a reminder not to pipe scripts that write files.
+
+---
+
+## 2026-10-04 — Session 1 (cont.): first deviation, and the snapshot fetcher
+
+### Deviation 001: filed before any data existed
+
+While writing the fetcher, I made it refuse any point whose coordinates are not inside a verified lock. The rule immediately caught a hole in my own lock:
+- **H2 v1 (red sky) named the point 150 km west of London only by its ID**, `location-london-west-150km`.
+- Its coordinates (51.51, −2.29) lived only in the throwaway generator script, so they were outside the hash. They could have been changed after seeing data without breaking v1.
+
+What I did, using the spec's own mechanism:
+- Filed `lab/deviations/deviation-red-sky-at-night-v1-001.json` (what changed, why, consequence, `dataSeenBeforeDeviation: false`).
+- Locked **H2 v2** (`8f2265688bbe…`), identical except for `data.pointLocations` and its own ID in the family list.
+- v1 keeps its lock and is marked *superseded*. History is not rewritten.
+- v2 takes v1's slot in the Holm family of six.
+- Committed and pushed before the fetch (`3588cd5`).
+
+`lab/src/registry.ts` now loads hypotheses, locks and deviations together. It fails on any hash mismatch, any deviation citing a wrong hash, and any replacement that is not locked.
+
+Lesson for the post: the first deviation came from the code, not a reviewer. Building the consumer of a lock is how you find out what the lock forgot.
+
+### Open-Meteo call weighting: assumption, not confirmed
+
+Raw text of the pricing page (retrieved 2026-10-04):
+
+> "Requests for data covering more than 10 weather variables or extending over a period of more than 2 weeks for a single location are considered multiple API calls. To calculate the number of API calls accurately, fractional counts are used. For example, a request for 2 weeks of data with 15 weather variables will be calculated as 1.5 API calls, while 4 weeks of data equals 3.0 API calls."
+
+**These two examples do not fit one linear rule.** Linear in time, 4 weeks would be 2.0. They are only consistent if the second example also has 15 variables (2 × 1.5 = 3.0).
+
+The fetcher therefore *assumes* `weight = (days / 14) × max(1, variables / 10)`. With 7 variables that gives:
+- 260.9 per decade chunk;
+- 1,956.7 per point;
+- **7,826.9 for 4 points**.
+
+Limits (terms page, verbatim): "Less than 10'000 API calls per day, 5'000 per hour and 600 per minute". The fetcher self-limits to a rolling 4,000 per hour, 450 per minute and 9,500 per day, so the run takes about 2¼ hours.
+
+If the real weighting is heavier, the first sign will be an HTTP 429. The fetcher then stops with no retry, and I stop and report.
+
+Confirmed by the owner: no other build on this machine uses Open-Meteo, so the per-IP allowance is ours alone.
+
+**Why decade chunks.** The weight scales with days, so chunking does not change the total. A decade request (~261) stays under the per-minute cap; a whole-period request per point (~1,957) would exceed it more than three times over in a single request.
+
+**What is not optimised.** Punxsutawney only needs 3 Feb–16 Mar of each year, but the lock says 1950-01-01 to 2024-12-31. Fetching a narrower window would mean arguing afterwards that it is equivalent. Fetch exactly what was locked.
+
+### Fetcher design (`ingest/`)
+
+- `plan.ts` builds every URL from **verified, active locks only**. It refuses on any lock failure, on hypotheses whose data specs differ, on a point without locked coordinates, on conflicting coordinates, or on a non-GMT timezone.
+- `fetcher.ts`:
+  - rolling hour, minute and day ledgers, persisted in `ingest/data/fetch-log.ndjson`, so a resumed run still respects earlier usage;
+  - the daily budget is checked **before the first request**;
+  - **any non-200, network error or malformed body stops the run, with no retry**;
+  - responses are validated: UTC offset 0, the exact expected hour count, the first timestamp, every variable present with the right length, and units (mm, km/h, °C, %);
+  - raw bytes are saved exactly as received, temp file then rename, with a sidecar holding the query URL, retrieval time, SHA-256, byte count, the grid cell Open-Meteo chose, and null counts;
+  - a re-run skips chunks whose bytes still match their checksum and query URL, and refetches anything else;
+  - `manifest.json` is written only after all 32 chunks re-verify from disk.
+- Raw chunks are gitignored and go to release assets. The manifest and fetch log are committed.
+
+Tests: 11 offline, using a fake clock and a fake Open-Meteo:
+- the real plan shape;
+- exact decade coverage;
+- refusal paths;
+- rolling limits never exceeded;
+- 429 stops at once with no retry and no manifest;
+- resume skips verified chunks and refetches a tampered one;
+- a malformed response saves nothing;
+- an over-budget plan makes zero requests.
+
+**Mutation check:** I removed the rate-limit wait (the limits test failed), then made a 429 retry instead of stopping (two tests failed). Both were restored. The tests actually guard the behaviour.
+
+A dry run against the real locks gave 32 chunks and 7,826.9 estimated units. No network was touched.

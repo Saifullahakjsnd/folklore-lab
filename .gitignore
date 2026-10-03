@@ -30,10 +30,11 @@ blob-report/
 Thumbs.db
 *.log
 
-# NOTE: ingest/data/raw/ is intentionally NOT ignored — the specs require
-# data snapshots (with retrieval date + sha256) to be committed so
-# evaluations reproduce. Route files >50 MB to GitHub release assets
-# and commit only the checksum manifest.
+# weather snapshots: raw chunks (~200 MB) go to GitHub release assets; only
+# ingest/data/manifest.json (checksums, query URLs, retrieval dates) and
+# ingest/data/fetch-log.ndjson are committed.
+ingest/data/raw/
+*.tmp
 
 # typescript incremental
 *.tsbuildinfo

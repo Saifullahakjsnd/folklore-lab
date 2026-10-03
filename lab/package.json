@@ -7,7 +7,9 @@
   },
   "scripts": {
     "typecheck": "tsc -p .",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "lock": "node scripts/lock.ts",
+    "verify-locks": "node scripts/verify-locks.ts"
   },
   "dependencies": {
     "suncalc": "^2.1.0"

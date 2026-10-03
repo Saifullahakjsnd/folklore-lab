@@ -119,3 +119,74 @@ Friction:
 - One deprecation warning: transitive `uuid@10.0.0`.
 
 **No weather data has been fetched.** The archive endpoint has not been called once.
+
+---
+
+## 2026-10-04 — Session 1 (cont.): the six hypotheses are locked
+
+### Prompt (worked)
+
+> All three answered — you can lock. 1. models=era5: YES … a blend that switches models across 1950-2024 makes the series INHOMOGENEOUS … 2. Do NOT pin gemini-2.5-flash … Pin the newest STABLE NON-PREVIEW flash, with its exact dated version string … 3. App SDK dev port: 3436 … Now lock all six hypotheses before any weather call.
+
+### Pre-lock decisions (owner-approved, before any data)
+
+| Decision | Choice | Why |
+| --- | --- | --- |
+| Reanalysis model | `models=era5` in every query | Homogeneous 1950–2024 series. `best_match` switches models (ERA5-Land, ERA5, IFS from 2017), so a trend could be a model change. ERA5-Land lacks cloud layers. Confirmed valid value in Open-Meteo's site source (`{ value: 'era5', label: 'ERA5', caption: '25 km, Global' }`) |
+| Verdict rule | **Supported also requires effect ≥ smallest effect of interest** | With ~27k daily units almost any difference is significant. Under the spec's literal rule a 0.4 pp effect would be stamped Supported. **Departure from the spec**, recorded inside every lock |
+| Time handling | Fetch **hourly only, in UTC**; local days, daily sums and daily mean temperature computed in lab code; sunset and moon from suncalc | One tested place for DST. Open-Meteo's own DST handling for daily aggregates is undocumented. `temperature_2m` replaces the daily variables: 7 hourly variables, same call weight |
+| Drafting model | `gemini-3.7-flash`, version `3.7-flash-08-2026` | Newest stable flash *with a dated version string*. `gemini-3.8-flash` (newer, stable) reports version `"3.0"`, which is undated. No shutdown date announced for either (deprecations page, 2026-10-04). One `generateContent` call succeeded |
+| Document IDs | Hyphens only (`hypothesis-rain-before-seven-v1`) | Dotted IDs are private in the Content Lake. **Departure from the spec's example ID**. The lock code refuses dotted IDs |
+| App SDK dev port | `SANITY_APP_PORT` (3436), read from env | 3333 is best-track's Studio |
+
+Facts confirmed for the definitions (Open-Meteo docs, retrieved 2026-10-04):
+- `precipitation` is a **"preceding hour sum"** with 0.1 mm precision. A value stamped 07:00 covers 06:00–07:00.
+- Cloud layers and `temperature_2m` are instantaneous.
+- `cell_selection` defaults to `land`. Units default to mm, km/h and °C, and all are pinned explicitly.
+
+Coordinates come from the Wikipedia coordinates API (retrieved 2026-10-04), rounded to 2 decimal places:
+- London 51.51, −0.13
+- Plymouth 50.37, −4.14
+- Punxsutawney 40.95, −78.98
+- The red-sky point is derived: same latitude as London, 150 km west → −2.29.
+
+### What a lock contains
+
+Each `lab/hypotheses/h*.json` is self-contained, so editing a referenced document cannot silently change a locked test. Each one holds:
+- the proverb text and the location with its coordinates;
+- the full data query spec (endpoint, model, variables, units, timezone, period);
+- the time rules (preceding-hour semantics, local-day definition, DST windows);
+- predictor and outcome, both with exact interval boundaries;
+- the effect definition and the test (with the R function whose semantics it must match);
+- the bootstrap (method, B = 10,000, block length, mulberry32 seed 20261004, percentile type 7);
+- the Holm family of all six, the smallest effect of interest, ordered verdict rules, and the missing-data rule.
+
+Locking (`lab/scripts/lock.ts`) works like this:
+1. Canonical JSON (RFC 8785 subset: sorted keys, no whitespace) is hashed with SHA-256 via Web Crypto.
+2. Each lock is written once with `wx`. An existing lock is never overwritten, and a re-run leaves it untouched.
+3. `lab/scripts/verify-locks.ts` recomputes every hash and exits non-zero on a mismatch, a missing lock or a corrupt lock, ready for CI.
+
+Tests: 11 pass. They cover hash stability across key order and formatting, ECMAScript number output, rejection of NaN, undefined and Dates, the known `abc` digest, a mismatch after an edit, a tampered lock, missing fields, and dotted IDs.
+
+| Hypothesis | SHA-256 |
+| --- | --- |
+| hypothesis-rain-before-seven-v1 | `78d56fd9d5ecfd0a5ad94009a7bfbaaf78b28ec1bbcaeb3ebd2a6943a1f5041c` |
+| hypothesis-red-sky-at-night-v1 | `ef501d9f6753894c250bb713fdb01bad14c2ad6d12f8cbb56b4c79f68224970d` |
+| hypothesis-mackerel-sky-v1 | `f4d7b4c45587557fb2aea08c6f0aeec2a2b615e8ca7e3021aaa15cca76a62eed` |
+| hypothesis-st-swithins-day-v1 | `e522e70e2ee564f7fed373728e25b187fa35f27d6cd143fb754594c43ea517e3` |
+| hypothesis-groundhog-day-v1 | `79d3bc46942527353c6c577806dcd3ae6e7ddef7174fe239e3436994fdff58c3` |
+| hypothesis-ring-around-the-moon-v1 | `2e770a4ecb68925d3532090d01c9788b278f1c27563e37c312e801c49ab2081f` |
+
+Manifest SHA-256: `6fa775a973f80466a6c1862b351054a3531f71569b0e6666ce0b1cdd1a4de50d`. Locked at `2026-10-03T22:05:16.672Z` (UTC; 2026-10-04 local), with **zero weather data fetched**.
+
+### Honesty notes for the post
+
+- **Prior knowledge exists.** The drafting agent's training includes general claims, for example that Phil's call is often reported as right well under half the time, and that "red sky at night" has a meteorological rationale. No project data was seen. The defence is the lock itself: definitions and verdict rules were fixed before any download. The predicted direction is always the proverb's own claim, never a guess at what the data will show.
+- **Phil's source.** The predictor source is locked as the Groundhog Club's published record. NOAA's page is deliberately not used as the predictor source because it also reports outcomes. `groundhog.org` returned HTTP 403 to a scripted HEAD request; retrieval is a later step.
+- **H5's normal** (1991–2020) comes from the same ERA5 series, so it is in-sample. That is stated in the lock.
+- **The git timestamp is self-asserted** until pushed. Pushing the lock commit to GitHub before the first fetch gives a third-party timestamp.
+
+### Where the model got stuck
+
+- A long multi-file bash heredoc failed with `unexpected EOF while looking for matching '`. The fix was to write files with the editor tool instead of shell heredocs.
+- `| head` on the lock re-run caused an EPIPE crash after the manifest had been written. Harmless (the manifest hash was unchanged), but a reminder not to pipe scripts that write files.

@@ -1,0 +1,169 @@
+{
+  "_type": "hypothesis",
+  "version": 1,
+  "period": {
+    "start": "1950-01-01",
+    "end": "2024-12-31",
+    "note": "The 1940s are excluded because early reanalysis is less reliable."
+  },
+  "alpha": 0.05,
+  "correctionFamily": {
+    "method": "Holm-Bonferroni",
+    "alpha": 0.05,
+    "members": [
+      "hypothesis-rain-before-seven-v1",
+      "hypothesis-red-sky-at-night-v1",
+      "hypothesis-mackerel-sky-v1",
+      "hypothesis-st-swithins-day-v1",
+      "hypothesis-groundhog-day-v1",
+      "hypothesis-ring-around-the-moon-v1"
+    ],
+    "implementation": "Adjusted p-values as R p.adjust(p, method = \"holm\") over the six primary raw p-values, computed in code and never typed."
+  },
+  "missingData": "A unit is excluded if any value its predictor or outcome needs is null or absent. The number of excluded units is reported with the trial. No imputation.",
+  "_id": "hypothesis-st-swithins-day-v1",
+  "proverb": {
+    "_id": "proverb-st-swithins-day",
+    "text": "St Swithin's Day, if thou dost rain, for forty days it will remain"
+  },
+  "statement": "In London, years with rain on 15 July have more rainy days from 16 July to 24 August than years with a dry 15 July.",
+  "location": {
+    "_id": "location-london",
+    "name": "London",
+    "lat": 51.51,
+    "lon": -0.13,
+    "timeZone": "Europe/London",
+    "coordinateSource": {
+      "url": "https://en.wikipedia.org/w/api.php?action=query&prop=coordinates&titles=London&format=json&formatversion=2",
+      "retrievedAt": "2026-10-04",
+      "note": "Wikipedia 51.50722222, -0.1275, rounded to 2 dp"
+    }
+  },
+  "data": {
+    "source": "Open-Meteo Historical Weather API",
+    "endpoint": "https://archive-api.open-meteo.com/v1/archive",
+    "models": "era5",
+    "modelNote": "ERA5 only (0.25 deg, 1940-present). Pinned so the 1950-2024 series is homogeneous: the default best_match switches between ERA5-Land, ERA5 and ECMWF IFS (2017+), so an apparent change could be a model change rather than weather. ERA5-Land has no cloud-layer variables.",
+    "hourly": [
+      "precipitation",
+      "cloud_cover",
+      "cloud_cover_low",
+      "cloud_cover_mid",
+      "cloud_cover_high",
+      "wind_gusts_10m",
+      "temperature_2m"
+    ],
+    "daily": [],
+    "timezone": "GMT",
+    "cellSelection": "land",
+    "units": {
+      "temperature": "celsius",
+      "windSpeed": "kmh",
+      "precipitation": "mm"
+    },
+    "timeformat": "iso8601",
+    "startDate": "1950-01-01",
+    "endDate": "2024-12-31",
+    "points": [
+      "location-london"
+    ],
+    "reanalysisCaveat": "Gridded reanalysis (modelled, ~25 km cells), not station readings; it smooths local showers."
+  },
+  "timeRules": {
+    "fetchTimeZone": "UTC (timezone=GMT); every timestamp is a UTC instant.",
+    "localTimeZone": "Europe/London",
+    "conversion": "UTC instants are converted to local wall-clock time in lab code with the IANA time zone database (Intl.DateTimeFormat).",
+    "precipitationSemantics": "The precipitation value stamped at instant t is the sum over (t - 1 h, t] (Open-Meteo: \"Preceding hour sum\", 0.1 mm precision). The accumulation over a local interval [a, b) is the sum of values stamped at instants t with a < t <= b.",
+    "instantSemantics": "cloud_cover, cloud_cover_low, cloud_cover_mid, cloud_cover_high and temperature_2m are instantaneous values at the stamped instant. wind_gusts_10m is taken as the value at the stamped instant as delivered.",
+    "localDay": "Local day D is the interval [00:00 D, 00:00 D+1) in local time: 24 hours normally, 23 on the spring-forward day, 25 on the fall-back day.",
+    "dailyPrecipitation": "Daily precipitation for local day D is the accumulation over local day D.",
+    "dailyMeanTemperature": "Daily mean temperature for local day D is the arithmetic mean of temperature_2m at every instant t with 00:00 D <= t < 00:00 D+1 (local).",
+    "astronomy": "Sun and moon positions come from suncalc 2.1.0 at the location coordinates; no atmospheric refraction is applied beyond what suncalc does."
+  },
+  "unit": {
+    "kind": "year",
+    "definition": "Each year Y from 1950 to 2024."
+  },
+  "predictor": {
+    "variable": "precipitation",
+    "point": "location-london",
+    "hours": {
+      "from": "00:00 15 July Y",
+      "to": "00:00 16 July Y",
+      "interval": "local day 15 July Y"
+    },
+    "aggregation": "sum",
+    "comparator": ">=",
+    "threshold": 1,
+    "units": "mm",
+    "conditions": [],
+    "groups": "wet year if the predictor holds, dry year otherwise"
+  },
+  "outcome": {
+    "variable": "precipitation",
+    "point": "location-london",
+    "hours": {
+      "from": "16 July Y",
+      "to": "24 August Y",
+      "interval": "local days, inclusive (40 days)"
+    },
+    "aggregation": "count of local days with daily precipitation >= 1 mm",
+    "comparator": "count",
+    "threshold": 1,
+    "units": "days",
+    "conditions": []
+  },
+  "comparison": "Wet-15-July years vs dry-15-July years",
+  "effect": {
+    "metric": "difference in mean rainy days",
+    "definition": "mean(outcome | wet years) - mean(outcome | dry years)",
+    "units": "days",
+    "nullValue": 0
+  },
+  "test": {
+    "name": "Mann-Whitney U",
+    "sidedness": "two-sided",
+    "implementation": "As R wilcox.test(wet, dry, exact = FALSE, correct = TRUE): normal approximation with tie correction and continuity correction."
+  },
+  "smallestEffect": {
+    "value": 2,
+    "units": "days"
+  },
+  "bootstrap": {
+    "method": "stratified bootstrap of years",
+    "resamples": 10000,
+    "blockLength": 1,
+    "blockUnit": "year",
+    "procedure": "Resample wet years with replacement within the wet group and dry years within the dry group (group sizes fixed), and recompute the effect. 7-day blocks do not apply to yearly units.",
+    "ci": "95% percentile interval: the 2.5th and 97.5th percentiles of the bootstrap effects, linear interpolation between order statistics (R quantile type 7).",
+    "prng": {
+      "algorithm": "mulberry32",
+      "seed": 20261004,
+      "note": "A fresh generator seeded with this value for each hypothesis."
+    }
+  },
+  "verdictRules": {
+    "order": "Evaluated top to bottom; the first rule that matches decides.",
+    "predictedDirection": "effect > 0",
+    "smallestEffectOfInterest": "2 days",
+    "rules": [
+      {
+        "verdict": "Supported",
+        "when": "adjusted p < 0.05 AND effect > 0 AND effect >= 2"
+      },
+      {
+        "verdict": "Contradicted",
+        "when": "adjusted p < 0.05 AND effect < 0"
+      },
+      {
+        "verdict": "Not supported",
+        "when": "(adjusted p < 0.05 AND effect > 0 AND effect < 2) OR (CI high < 2)"
+      },
+      {
+        "verdict": "Inconclusive",
+        "when": "otherwise"
+      }
+    ],
+    "departureFromSpec": "The spec stamps any significant effect in the predicted direction as Supported. With ~27,000 daily units almost any difference is significant, so Supported here also requires the point estimate to reach the smallest effect of interest; significant-but-smaller effects are Not supported. Decided by the project owner on 2026-10-04, before any data was fetched."
+  }
+}

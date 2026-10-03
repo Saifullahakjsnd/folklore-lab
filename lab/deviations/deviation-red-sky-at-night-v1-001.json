@@ -1,0 +1,14 @@
+{
+  "_id": "deviation-red-sky-at-night-v1-001",
+  "_type": "deviation",
+  "preregistration": {
+    "hypothesisId": "hypothesis-red-sky-at-night-v1",
+    "sha256": "ef501d9f6753894c250bb713fdb01bad14c2ad6d12f8cbb56b4c79f68224970d"
+  },
+  "supersededBy": "hypothesis-red-sky-at-night-v2",
+  "whatChanged": "Added data.pointLocations with the coordinates of both points (London 51.51, -0.13; red-sky point 51.51, -2.29). Version 1 named the second point only by id (location-london-west-150km), so its coordinates were outside the hash. Correction-family member id updated to v2. Nothing else changed.",
+  "reason": "Found while writing the fetcher, which refuses to fetch any point whose coordinates are not inside a verified lock. The coordinates had been fixed in the generator script on 2026-10-04 but were not part of the locked content, so they could have been changed later without breaking the v1 hash.",
+  "consequence": "v1 is superseded and will never be tested. v2 takes v1's slot in the six-member Holm family; the other five locks still list the v1 id, and this deviation is the mapping. Filed before any weather data was fetched.",
+  "createdAt": "2026-10-03T22:17:30.033Z",
+  "dataSeenBeforeDeviation": false
+}

@@ -15,6 +15,13 @@
       "lockedBy": "Saifullah (project owner; authorised in the agent session, 2026-10-04)"
     },
     {
+      "hypothesisId": "hypothesis-red-sky-at-night-v2",
+      "version": 2,
+      "sha256": "8f2265688bbed72b019e22fa990316404786561d50f18912b84a4acf754a640b",
+      "lockedAt": "2026-10-03T22:17:30.407Z",
+      "lockedBy": "Saifullah (project owner; authorised in the agent session, 2026-10-04)"
+    },
+    {
       "hypothesisId": "hypothesis-mackerel-sky-v1",
       "version": 1,
       "sha256": "f4d7b4c45587557fb2aea08c6f0aeec2a2b615e8ca7e3021aaa15cca76a62eed",
@@ -55,5 +62,5 @@
     "hypothesisAuthor": "Operational definitions drafted by Claude Code (claude-opus-5-5); decisions approved by the project owner.",
     "weatherDataFetchedBeforeLock": false
   },
-  "manifestSha256": "6fa775a973f80466a6c1862b351054a3531f71569b0e6666ce0b1cdd1a4de50d"
+  "manifestSha256": "45c200e69628085f457b348c63f70b80558891aa39e5e0f6bbfe95ca8f12a135"
 }

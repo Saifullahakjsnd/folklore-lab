@@ -1,28 +1,12 @@
-// Recomputes the hash of every hypothesis and compares it with its lock.
-// Exits non-zero on any mismatch, missing lock or corrupt lock (used by CI).
-import {existsSync, readdirSync, readFileSync} from 'node:fs'
+// Recomputes the hash of every hypothesis and compares it with its lock, and checks that
+// every deviation points at a verified old version and a locked replacement.
+// Exits non-zero on any failure (used by CI).
 import {join} from 'node:path'
-import {checkLock, type PreregistrationLock} from '../src/preregistration.ts'
+import {loadRegistry} from '../src/registry.ts'
 
-const root = join(import.meta.dirname, '..')
-const files = readdirSync(join(root, 'hypotheses')).filter((f) => f.endsWith('.json')).sort()
-
-let failures = 0
-for (const file of files) {
-  const hypothesis = JSON.parse(readFileSync(join(root, 'hypotheses', file), 'utf8')) as Record<string, unknown>
-  const id = String(hypothesis._id)
-  const lockFile = join(root, 'preregistration', `${id}.lock.json`)
-  if (!existsSync(lockFile)) {
-    console.error(`NOT LOCKED  ${id}`)
-    failures++
-    continue
-  }
-  const result = await checkLock(hypothesis, JSON.parse(readFileSync(lockFile, 'utf8')) as PreregistrationLock)
-  if (result.ok) {
-    console.log(`ok          ${id} ${result.sha256}`)
-  } else {
-    console.error(`${result.reason.toUpperCase()}  ${id} expected ${result.expected} got ${result.actual}`)
-    failures++
-  }
-}
-if (failures > 0) process.exit(1)
+const registry = await loadRegistry(join(import.meta.dirname, '..'))
+for (const {lock} of registry.active) console.log(`ok          ${lock.hypothesisId} ${lock.sha256}`)
+for (const {lock} of registry.superseded) console.log(`superseded  ${lock.hypothesisId} ${lock.sha256}`)
+for (const d of registry.deviations) console.log(`deviation   ${d._id}: ${d.preregistration.hypothesisId} -> ${d.supersededBy}`)
+for (const f of registry.failures) console.error(`FAIL        ${f.hypothesisId}: ${f.problem}`)
+if (registry.failures.length > 0) process.exit(1)

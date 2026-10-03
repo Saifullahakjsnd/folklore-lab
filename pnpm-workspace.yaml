@@ -1,0 +1,8 @@
+packages:
+  - studio
+  - web
+  - lab
+  - workflows
+  - app
+  - agent
+  - ingest

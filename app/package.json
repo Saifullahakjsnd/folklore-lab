@@ -1,0 +1,19 @@
+{
+  "name": "@folklore/app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@sanity/sdk": "3.7.0",
+    "@sanity/sdk-react": "3.7.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "sanity": "6.17.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0"
+  }
+}

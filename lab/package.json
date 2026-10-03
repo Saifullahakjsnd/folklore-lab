@@ -1,0 +1,15 @@
+{
+  "name": "@folklore/lab",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "suncalc": "^2.1.0"
+  }
+}

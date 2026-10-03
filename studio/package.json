@@ -1,0 +1,21 @@
+{
+  "name": "@folklore/studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev --port 3336",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@sanity/vision": "6.17.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "sanity": "6.17.0",
+    "styled-components": "^6.5.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0"
+  }
+}

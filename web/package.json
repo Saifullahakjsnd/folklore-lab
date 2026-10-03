@@ -1,0 +1,24 @@
+{
+  "name": "@folklore/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3003",
+    "build": "next build",
+    "start": "next start --port 3003",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@sanity/client": "^8.9.0",
+    "next": "16.3.8",
+    "next-sanity": "13.3.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0"
+  }
+}

@@ -156,3 +156,11 @@ State on disk (checked):
 - Resume is one command: `node ingest/scripts/fetch.ts`. It re-verifies the saved chunks by checksum, skips them, and carries the rolling rate ledger over from ingest/data/fetch-log.ndjson.
 
 Also done: lab/scripts/run-trials.ts (blinded; results to a gitignored file, only their SHA-256 printed). Next unblocked: Phil's call record for H5. groundhog.org blocks scripted requests (403), so I am reading the public page in Chrome.
+
+## 2026-10-04T08:40Z — agent
+STATE: H5's predictor source cannot be retrieved by me; the fetch is still paused (2/32).
+BLOCKED_ON: owner — (1) "resume fetch"; (2) Phil's record for H5.
+
+On (2): groundhog.org answers every scripted request with 403, and in Chrome it shows a bot-detection "security verification" page that did not clear by itself. I do not complete or bypass bot checks, so I closed the tab. What I need: open https://www.groundhog.org/groundhog-day/history-past-predictions in your own browser, save it as a complete page (Ctrl+S, "Webpage, HTML only"), and put the file at ingest/data/groundhog/groundhog-org-past-predictions.html. I will record its SHA-256, the URL and the retrieval date, and parse the calls into a committed JSON file with that provenance. The lock names the Groundhog Club's record and excludes NOAA (it shows outcomes), so I will not substitute another source without your say-so.
+
+H1-H4 and H6 do not depend on this and can run as soon as the snapshot is complete. Holm and verdicts need all six, so they wait for H5.

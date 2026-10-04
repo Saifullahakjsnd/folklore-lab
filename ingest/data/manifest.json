@@ -1,0 +1,893 @@
+{
+  "snapshotId": "snapshot-era5-hourly-1950-2024-v1",
+  "source": "Open-Meteo Historical Weather API",
+  "attribution": "Weather data by Open-Meteo.com (https://open-meteo.com/), CC BY 4.0. Reanalysis: Copernicus Climate Change Service (C3S) ERA5, ECMWF.",
+  "licence": "https://creativecommons.org/licenses/by/4.0/",
+  "lockManifestSha256": "45c200e69628085f457b348c63f70b80558891aa39e5e0f6bbfe95ca8f12a135",
+  "hypotheses": [
+    {
+      "hypothesisId": "hypothesis-rain-before-seven-v1",
+      "sha256": "78d56fd9d5ecfd0a5ad94009a7bfbaaf78b28ec1bbcaeb3ebd2a6943a1f5041c"
+    },
+    {
+      "hypothesisId": "hypothesis-red-sky-at-night-v2",
+      "sha256": "8f2265688bbed72b019e22fa990316404786561d50f18912b84a4acf754a640b"
+    },
+    {
+      "hypothesisId": "hypothesis-mackerel-sky-v1",
+      "sha256": "f4d7b4c45587557fb2aea08c6f0aeec2a2b615e8ca7e3021aaa15cca76a62eed"
+    },
+    {
+      "hypothesisId": "hypothesis-st-swithins-day-v1",
+      "sha256": "e522e70e2ee564f7fed373728e25b187fa35f27d6cd143fb754594c43ea517e3"
+    },
+    {
+      "hypothesisId": "hypothesis-groundhog-day-v1",
+      "sha256": "79d3bc46942527353c6c577806dcd3ae6e7ddef7174fe239e3436994fdff58c3"
+    },
+    {
+      "hypothesisId": "hypothesis-ring-around-the-moon-v1",
+      "sha256": "2e770a4ecb68925d3532090d01c9788b278f1c27563e37c312e801c49ab2081f"
+    }
+  ],
+  "spec": {
+    "endpoint": "https://archive-api.open-meteo.com/v1/archive",
+    "models": "era5",
+    "hourly": [
+      "precipitation",
+      "cloud_cover",
+      "cloud_cover_low",
+      "cloud_cover_mid",
+      "cloud_cover_high",
+      "wind_gusts_10m",
+      "temperature_2m"
+    ],
+    "timezone": "GMT",
+    "cellSelection": "land",
+    "units": {
+      "temperature": "celsius",
+      "windSpeed": "kmh",
+      "precipitation": "mm"
+    },
+    "timeformat": "iso8601",
+    "startDate": "1950-01-01",
+    "endDate": "2024-12-31"
+  },
+  "weightAssumption": "(days / 14) * max(1, variables / 10); unconfirmed, see docs/BUILD_LOG.md",
+  "totalEstimatedWeight": 7826.857142857145,
+  "chunks": [
+    {
+      "pointId": "location-london",
+      "startDate": "1950-01-01",
+      "endDate": "1959-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-0.13&start_date=1950-01-01&end_date=1959-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T07:52:16.641Z",
+      "sha256": "dc0f0236ccc28959d1e4fe2d252cecb7bbe1a4e4787b742e2a90bef43769e0fd",
+      "bytes": 3902456,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -0.25,
+        "elevation": 29
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london/location-london_1950-01-01_1959-12-31.json"
+    },
+    {
+      "pointId": "location-london",
+      "startDate": "1960-01-01",
+      "endDate": "1969-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-0.13&start_date=1960-01-01&end_date=1969-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T07:53:16.659Z",
+      "sha256": "291eee760b060fbf2683b03fb6e2aa7a65183f2b073f9c6745a59919097c668b",
+      "bytes": 3917708,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -0.25,
+        "elevation": 29
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london/location-london_1960-01-01_1969-12-31.json"
+    },
+    {
+      "pointId": "location-london",
+      "startDate": "1970-01-01",
+      "endDate": "1979-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-0.13&start_date=1970-01-01&end_date=1979-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:36:07.096Z",
+      "sha256": "2b19dc357225c600532a2ef9d00fa548ff15d7e228689fc4b505b1ab67be7565",
+      "bytes": 3920465,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -0.25,
+        "elevation": 29
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london/location-london_1970-01-01_1979-12-31.json"
+    },
+    {
+      "pointId": "location-london",
+      "startDate": "1980-01-01",
+      "endDate": "1989-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-0.13&start_date=1980-01-01&end_date=1989-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:37:07.106Z",
+      "sha256": "70d10c509f81cf332ce8b916b1cbf383d25662930fa58787e87d38bffd91d672",
+      "bytes": 3920496,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -0.25,
+        "elevation": 29
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london/location-london_1980-01-01_1989-12-31.json"
+    },
+    {
+      "pointId": "location-london",
+      "startDate": "1990-01-01",
+      "endDate": "1999-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-0.13&start_date=1990-01-01&end_date=1999-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:38:07.108Z",
+      "sha256": "4594cadf1a91c16c8238fe6adb3b5a6845f1673c911eb016dab9ce348b8aa4bd",
+      "bytes": 3914847,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -0.25,
+        "elevation": 29
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london/location-london_1990-01-01_1999-12-31.json"
+    },
+    {
+      "pointId": "location-london",
+      "startDate": "2000-01-01",
+      "endDate": "2009-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-0.13&start_date=2000-01-01&end_date=2009-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:39:07.113Z",
+      "sha256": "84d7d90c11cffe9212986e9a1a5ccdfa5dee444157b1db0e2f80066c2e2d0133",
+      "bytes": 3923653,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -0.25,
+        "elevation": 29
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london/location-london_2000-01-01_2009-12-31.json"
+    },
+    {
+      "pointId": "location-london",
+      "startDate": "2010-01-01",
+      "endDate": "2019-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-0.13&start_date=2010-01-01&end_date=2019-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:40:07.123Z",
+      "sha256": "11e65f9aaf89be373412d56d30feefec9f0a93e155c04c999e9171f8b401fcc7",
+      "bytes": 3922319,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -0.25,
+        "elevation": 29
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london/location-london_2010-01-01_2019-12-31.json"
+    },
+    {
+      "pointId": "location-london",
+      "startDate": "2020-01-01",
+      "endDate": "2024-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-0.13&start_date=2020-01-01&end_date=2024-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:40:10.499Z",
+      "sha256": "8d8384c127a9db4efbbfdd944351b5e21e4c6f13403ed5ff451aceb6c9adf943",
+      "bytes": 1963583,
+      "estimatedWeight": 130.5,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -0.25,
+        "elevation": 29
+      },
+      "hours": 43848,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london/location-london_2020-01-01_2024-12-31.json"
+    },
+    {
+      "pointId": "location-london-west-150km",
+      "startDate": "1950-01-01",
+      "endDate": "1959-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-2.29&start_date=1950-01-01&end_date=1959-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:41:07.129Z",
+      "sha256": "f6928d2ecb78e75d49ee52c5413e58847e1e60dd426ef359537719712e445fd1",
+      "bytes": 3908669,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -2.25,
+        "elevation": 139
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london-west-150km/location-london-west-150km_1950-01-01_1959-12-31.json"
+    },
+    {
+      "pointId": "location-london-west-150km",
+      "startDate": "1960-01-01",
+      "endDate": "1969-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-2.29&start_date=1960-01-01&end_date=1969-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:42:07.132Z",
+      "sha256": "dc9a04ad95683f660423eebb9f2194492c8bbb4d5b623beaf550f20cb7701914",
+      "bytes": 3923637,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -2.25,
+        "elevation": 139
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london-west-150km/location-london-west-150km_1960-01-01_1969-12-31.json"
+    },
+    {
+      "pointId": "location-london-west-150km",
+      "startDate": "1970-01-01",
+      "endDate": "1979-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-2.29&start_date=1970-01-01&end_date=1979-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:43:07.142Z",
+      "sha256": "d73bc2da1305a58f8b101d53e74571080b62d2b251f275c21b977a40a6311da1",
+      "bytes": 3925759,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -2.25,
+        "elevation": 139
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london-west-150km/location-london-west-150km_1970-01-01_1979-12-31.json"
+    },
+    {
+      "pointId": "location-london-west-150km",
+      "startDate": "1980-01-01",
+      "endDate": "1989-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-2.29&start_date=1980-01-01&end_date=1989-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:44:07.151Z",
+      "sha256": "a7f15f6d85fd891192b54b79404d3174ea3ca97c6f502f1d47f1bf4873286d72",
+      "bytes": 3926911,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -2.25,
+        "elevation": 139
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london-west-150km/location-london-west-150km_1980-01-01_1989-12-31.json"
+    },
+    {
+      "pointId": "location-london-west-150km",
+      "startDate": "1990-01-01",
+      "endDate": "1999-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-2.29&start_date=1990-01-01&end_date=1999-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:45:07.158Z",
+      "sha256": "706fd01b19529a5963e30abd08adbb02a7193eda8f8c90d2cf8ea05eeaa2cd59",
+      "bytes": 3921801,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -2.25,
+        "elevation": 139
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london-west-150km/location-london-west-150km_1990-01-01_1999-12-31.json"
+    },
+    {
+      "pointId": "location-london-west-150km",
+      "startDate": "2000-01-01",
+      "endDate": "2009-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-2.29&start_date=2000-01-01&end_date=2009-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:46:07.165Z",
+      "sha256": "68bf160182ab11ae0335e03f6178c6a2693aac13dbb874ce77f347467190a99d",
+      "bytes": 3928424,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -2.25,
+        "elevation": 139
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london-west-150km/location-london-west-150km_2000-01-01_2009-12-31.json"
+    },
+    {
+      "pointId": "location-london-west-150km",
+      "startDate": "2010-01-01",
+      "endDate": "2019-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-2.29&start_date=2010-01-01&end_date=2019-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:47:07.167Z",
+      "sha256": "4e149babe088232d9ab11ccb45b05e4e69810e1c78b5b843db9f0252b1e00125",
+      "bytes": 3930605,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -2.25,
+        "elevation": 139
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london-west-150km/location-london-west-150km_2010-01-01_2019-12-31.json"
+    },
+    {
+      "pointId": "location-london-west-150km",
+      "startDate": "2020-01-01",
+      "endDate": "2024-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=51.51&longitude=-2.29&start_date=2020-01-01&end_date=2024-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:47:14.574Z",
+      "sha256": "9d4ca688373034e7f7d3b62ed31444d4e76f0fe9df6e511ecc280f777ec79907",
+      "bytes": 1967430,
+      "estimatedWeight": 130.5,
+      "grid": {
+        "latitude": 51.5,
+        "longitude": -2.25,
+        "elevation": 139
+      },
+      "hours": 43848,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-london-west-150km/location-london-west-150km_2020-01-01_2024-12-31.json"
+    },
+    {
+      "pointId": "location-plymouth",
+      "startDate": "1950-01-01",
+      "endDate": "1959-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=50.37&longitude=-4.14&start_date=1950-01-01&end_date=1959-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:48:07.168Z",
+      "sha256": "a4a296f018c731996960cf20c85256d64c01d78a1c12fbcb86556bb0cf6e3e20",
+      "bytes": 3915597,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 50.5,
+        "longitude": -4.25,
+        "elevation": 26
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-plymouth/location-plymouth_1950-01-01_1959-12-31.json"
+    },
+    {
+      "pointId": "location-plymouth",
+      "startDate": "1960-01-01",
+      "endDate": "1969-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=50.37&longitude=-4.14&start_date=1960-01-01&end_date=1969-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T12:49:07.172Z",
+      "sha256": "dcf248c1d10c936b83c430f34a5766a4779a0eee03df4f7d6fcfc3cd931f2381",
+      "bytes": 3930408,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 50.5,
+        "longitude": -4.25,
+        "elevation": 26
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-plymouth/location-plymouth_1960-01-01_1969-12-31.json"
+    },
+    {
+      "pointId": "location-plymouth",
+      "startDate": "1970-01-01",
+      "endDate": "1979-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=50.37&longitude=-4.14&start_date=1970-01-01&end_date=1979-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:36:07.127Z",
+      "sha256": "afb5ce316235381a2e7ea4a8ba14e87231cafadb77d1493d2dfe862f0a12cb7a",
+      "bytes": 3935886,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 50.5,
+        "longitude": -4.25,
+        "elevation": 26
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-plymouth/location-plymouth_1970-01-01_1979-12-31.json"
+    },
+    {
+      "pointId": "location-plymouth",
+      "startDate": "1980-01-01",
+      "endDate": "1989-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=50.37&longitude=-4.14&start_date=1980-01-01&end_date=1989-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:37:07.136Z",
+      "sha256": "cc566904268b48f3ea89498b027915c76bb29e164b1871680b912a3e48f2873d",
+      "bytes": 3938787,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 50.5,
+        "longitude": -4.25,
+        "elevation": 26
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-plymouth/location-plymouth_1980-01-01_1989-12-31.json"
+    },
+    {
+      "pointId": "location-plymouth",
+      "startDate": "1990-01-01",
+      "endDate": "1999-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=50.37&longitude=-4.14&start_date=1990-01-01&end_date=1999-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:38:07.146Z",
+      "sha256": "249e07d11353bb067e7c62968c182a90656f4cd3a2706fd33140f978fff3e476",
+      "bytes": 3934729,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 50.5,
+        "longitude": -4.25,
+        "elevation": 26
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-plymouth/location-plymouth_1990-01-01_1999-12-31.json"
+    },
+    {
+      "pointId": "location-plymouth",
+      "startDate": "2000-01-01",
+      "endDate": "2009-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=50.37&longitude=-4.14&start_date=2000-01-01&end_date=2009-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:43:24.754Z",
+      "sha256": "a7b73ebaf91a431627e18a91e149575295f1db3ad9c5bceaf97bd1f149fffea7",
+      "bytes": 3937716,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 50.5,
+        "longitude": -4.25,
+        "elevation": 26
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-plymouth/location-plymouth_2000-01-01_2009-12-31.json"
+    },
+    {
+      "pointId": "location-plymouth",
+      "startDate": "2010-01-01",
+      "endDate": "2019-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=50.37&longitude=-4.14&start_date=2010-01-01&end_date=2019-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:44:24.758Z",
+      "sha256": "5fb8c1668dd71e2f45365cd7b9a1ff173da7d8e0d623eda9bba901dbc40ff2ac",
+      "bytes": 3941759,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 50.5,
+        "longitude": -4.25,
+        "elevation": 26
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-plymouth/location-plymouth_2010-01-01_2019-12-31.json"
+    },
+    {
+      "pointId": "location-plymouth",
+      "startDate": "2020-01-01",
+      "endDate": "2024-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=50.37&longitude=-4.14&start_date=2020-01-01&end_date=2024-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:44:28.777Z",
+      "sha256": "610a24cefaa1f9a691c666fd58d1d7c196f19ebb83db53d4543ed8a005595fcb",
+      "bytes": 1973680,
+      "estimatedWeight": 130.5,
+      "grid": {
+        "latitude": 50.5,
+        "longitude": -4.25,
+        "elevation": 26
+      },
+      "hours": 43848,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-plymouth/location-plymouth_2020-01-01_2024-12-31.json"
+    },
+    {
+      "pointId": "location-punxsutawney",
+      "startDate": "1950-01-01",
+      "endDate": "1959-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=40.95&longitude=-78.98&start_date=1950-01-01&end_date=1959-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:45:24.764Z",
+      "sha256": "2e5d3a715fdd725dba0215cc74a540ceae55944c5927e5a87ef34f66ae321389",
+      "bytes": 3911878,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 41,
+        "longitude": -79,
+        "elevation": 414
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-punxsutawney/location-punxsutawney_1950-01-01_1959-12-31.json"
+    },
+    {
+      "pointId": "location-punxsutawney",
+      "startDate": "1960-01-01",
+      "endDate": "1969-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=40.95&longitude=-78.98&start_date=1960-01-01&end_date=1969-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:46:24.772Z",
+      "sha256": "afabf0b6432686e20d813cbfa5bd5fa4dc58e7d564cb71203d5d71e3427d566c",
+      "bytes": 3907916,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 41,
+        "longitude": -79,
+        "elevation": 414
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-punxsutawney/location-punxsutawney_1960-01-01_1969-12-31.json"
+    },
+    {
+      "pointId": "location-punxsutawney",
+      "startDate": "1970-01-01",
+      "endDate": "1979-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=40.95&longitude=-78.98&start_date=1970-01-01&end_date=1979-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:47:24.777Z",
+      "sha256": "036f81fa02f8fdf334d247c00dcdeb8458636ca1e822c09ebf06f163e20757ce",
+      "bytes": 3919640,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 41,
+        "longitude": -79,
+        "elevation": 414
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-punxsutawney/location-punxsutawney_1970-01-01_1979-12-31.json"
+    },
+    {
+      "pointId": "location-punxsutawney",
+      "startDate": "1980-01-01",
+      "endDate": "1989-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=40.95&longitude=-78.98&start_date=1980-01-01&end_date=1989-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:48:24.781Z",
+      "sha256": "ebff185001d865fb54ca51613a4d4faec8cf26f2552ace6a8a761970528d1bc2",
+      "bytes": 3918724,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 41,
+        "longitude": -79,
+        "elevation": 414
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-punxsutawney/location-punxsutawney_1980-01-01_1989-12-31.json"
+    },
+    {
+      "pointId": "location-punxsutawney",
+      "startDate": "1990-01-01",
+      "endDate": "1999-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=40.95&longitude=-78.98&start_date=1990-01-01&end_date=1999-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:49:24.786Z",
+      "sha256": "a18515b7706cee4a4dabdb4283ce928d22d878e57d1a9e0cf6bb0eaff5593995",
+      "bytes": 3913475,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 41,
+        "longitude": -79,
+        "elevation": 414
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-punxsutawney/location-punxsutawney_1990-01-01_1999-12-31.json"
+    },
+    {
+      "pointId": "location-punxsutawney",
+      "startDate": "2000-01-01",
+      "endDate": "2009-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=40.95&longitude=-78.98&start_date=2000-01-01&end_date=2009-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T13:50:24.794Z",
+      "sha256": "0c725b4e696ce9411b37d2b6a116bccca226b1ad93a1fa05bc81d61af1f34ace",
+      "bytes": 3914541,
+      "estimatedWeight": 260.92857142857144,
+      "grid": {
+        "latitude": 41,
+        "longitude": -79,
+        "elevation": 414
+      },
+      "hours": 87672,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-punxsutawney/location-punxsutawney_2000-01-01_2009-12-31.json"
+    },
+    {
+      "pointId": "location-punxsutawney",
+      "startDate": "2010-01-01",
+      "endDate": "2019-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=40.95&longitude=-78.98&start_date=2010-01-01&end_date=2019-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T14:22:21.489Z",
+      "sha256": "5d62014270070a5e941c6233b0f97daaedc260c927e3b0aa56be0856ce864fe4",
+      "bytes": 3921508,
+      "estimatedWeight": 260.85714285714283,
+      "grid": {
+        "latitude": 41,
+        "longitude": -79,
+        "elevation": 414
+      },
+      "hours": 87648,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-punxsutawney/location-punxsutawney_2010-01-01_2019-12-31.json"
+    },
+    {
+      "pointId": "location-punxsutawney",
+      "startDate": "2020-01-01",
+      "endDate": "2024-12-31",
+      "queryUrl": "https://archive-api.open-meteo.com/v1/archive?latitude=40.95&longitude=-78.98&start_date=2020-01-01&end_date=2024-12-31&hourly=precipitation%2Ccloud_cover%2Ccloud_cover_low%2Ccloud_cover_mid%2Ccloud_cover_high%2Cwind_gusts_10m%2Ctemperature_2m&models=era5&timezone=GMT&cell_selection=land&temperature_unit=celsius&wind_speed_unit=kmh&precipitation_unit=mm&timeformat=iso8601",
+      "retrievedAt": "2026-10-04T14:22:25.599Z",
+      "sha256": "68019590f246d6b2c70a130fcbb55202ee48abcc278594ad2804f4aabc6b6277",
+      "bytes": 1955082,
+      "estimatedWeight": 130.5,
+      "grid": {
+        "latitude": 41,
+        "longitude": -79,
+        "elevation": 414
+      },
+      "hours": 43848,
+      "nullCounts": {
+        "precipitation": 0,
+        "cloud_cover": 0,
+        "cloud_cover_low": 0,
+        "cloud_cover_mid": 0,
+        "cloud_cover_high": 0,
+        "wind_gusts_10m": 0,
+        "temperature_2m": 0
+      },
+      "file": "raw/location-punxsutawney/location-punxsutawney_2020-01-01_2024-12-31.json"
+    }
+  ],
+  "snapshotSha256": "4dc5ac6ec55c5bf95a4486d63a3e99f78a9f20a5a53a0aa0429fc3b2e686ee57"
+}

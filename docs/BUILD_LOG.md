@@ -479,3 +479,20 @@ The owner's pre-flight secret scan before going public found only false positive
 
 - 26 documents (6 proverbs, 4 locations, 7 hypotheses including the superseded red-sky v1, 7 pre-registrations, 1 deviation, 1 erratum) imported into `production` with `createIfNotExists`, so nothing already present can be overwritten. This went through the HTTP mutate API (`lab/scripts/import-to-sanity.ts`) with the Editor token (F3), and ran while the fetch was rate-limit idle. Result: 26 created.
 - **Anonymous (token-free) reads return all 26.** Recomputing each hypothesis's hash from the definition *as stored in Sanity* matches its pre-registration for all 7, so anyone can re-derive the locks from the public dataset alone.
+
+---
+
+## 2026-10-04T14:22Z — The snapshot is complete
+
+- **32 of 32 chunks verified; manifest written. Snapshot SHA-256 `4dc5ac6ec55c5bf95a4486d63a3e99f78a9f20a5a53a0aa0429fc3b2e686ee57`.** It was fetched under lock manifest `45c200e6…`, the current one.
+- **34 requests, all HTTP 200, no 429.** First request 07:52:16Z, after the repo went public at 07:46Z. Last 14:22:25Z.
+- Estimated weight 8,348.6 against the 7,826.9 plan. The difference is exactly two lost requests (below), not Open-Meteo weighting differently from the assumed rule.
+- 2,629,824 point-hours × 7 variables = 18.4M values, 117.7 MB raw. **Zero nulls** in every variable.
+- ERA5 cells chosen by Open-Meteo: London 51.5, −0.25; red-sky point 51.5, −2.25; Plymouth 50.5, −4.25; Punxsutawney 41, −79.
+
+### What went wrong during the fetch, and what the safeguards did
+
+1. **Host memory pressure stopped it twice** (07:54Z after 2 chunks; 13:51Z after 30). The machine had 0.3 GB free, with Chrome at 6.5 GB. Claude Code stops background shells under memory pressure while the session is idle. The first stop came after Open-Meteo had answered the third request but before it was written: one lost request, and no partial file. The second stop came during a rate-limit wait: nothing lost. Both times there was no manifest, so no partial snapshot could pass as complete. Resume re-verified every saved chunk by checksum and skipped it. The last two chunks were run in the foreground.
+2. **One HTTP 200 that was not JSON** (Plymouth 2000–09, 13:39Z). The fetcher aborted without retrying and without saving, as designed. But it had discarded the body, so the cause is unknown: my design gap. It now keeps rejected bytes in `ingest/data/failed/`. The re-request succeeded, and nothing has failed since.
+
+Committed: `ingest/data/manifest.json` (every chunk's query URL, retrieval time, SHA-256, bytes, grid cell, null counts) and `ingest/data/fetch-log.ndjson` (every request with time, weight and status). The raw chunks go to a GitHub release.

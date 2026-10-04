@@ -1,0 +1,11 @@
+{
+  "what": "SHA-256 commitments to the six trial results, published BEFORE anyone (including the agent) has seen them",
+  "committedAt": "2026-10-04T14:35:00Z",
+  "snapshotSha256": "4dc5ac6ec55c5bf95a4486d63a3e99f78a9f20a5a53a0aa0429fc3b2e686ee57",
+  "lockManifestSha256": "45c200e69628085f457b348c63f70b80558891aa39e5e0f6bbfe95ca8f12a135",
+  "numbersSha256": "28df6c2f1a065c87c25cc4aee73bb5dfc2f2b9ea168a6eee7e3e1033a8ed594d",
+  "numbersSha256Definition": "sha256(canonical JSON of the `family` array: all six results with Holm-adjusted p and computed verdicts) as written by lab/scripts/run-trials.ts",
+  "reproduced": "Two independent runs of all six trials produced the same numbersSha256.",
+  "trialsRan": 6,
+  "trialsRefused": 0
+}

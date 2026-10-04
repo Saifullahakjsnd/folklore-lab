@@ -496,3 +496,12 @@ The owner's pre-flight secret scan before going public found only false positive
 2. **One HTTP 200 that was not JSON** (Plymouth 2000–09, 13:39Z). The fetcher aborted without retrying and without saving, as designed. But it had discarded the body, so the cause is unknown: my design gap. It now keeps rejected bytes in `ingest/data/failed/`. The re-request succeeded, and nothing has failed since.
 
 Committed: `ingest/data/manifest.json` (every chunk's query URL, retrieval time, SHA-256, bytes, grid cell, null counts) and `ingest/data/fetch-log.ndjson` (every request with time, weight and status). The raw chunks go to a GitHub release.
+
+---
+
+## 2026-10-04T14:35Z — Six trials run, blinded; results committed by hash before unblinding
+
+- `node lab/scripts/run-trials.ts ingest/data/groundhog/groundhog-calls.json`: snapshot verified, **6 of 6 trials ran, 0 refused**, then the Holm correction across the family and the locked verdict rules. It took 98 seconds.
+- **Nobody has seen a number.** The script writes results to a gitignored file and prints only which trials ran and a hash.
+- **Commitment:** `lab/results/blinded-commitment.json` publishes `numbersSha256 = 28df6c2f…`, the SHA-256 of the canonical JSON of all six results. It is pushed before unblinding, so the published numbers can be checked against a value fixed in advance.
+- **Determinism, shown blind:** a second full run gave the identical `numbersSha256`.

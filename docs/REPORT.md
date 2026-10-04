@@ -170,3 +170,11 @@ STATE: fetch 18/32 (London and the red-sky point done; Plymouth started; rate-li
 BLOCKED_ON: none for steps 1-4. Step 5 (deploy the workflow from an interactive `sanity login`): I will say when I get there (per F38).
 
 - Guidance 13:01Z read: F17 withdrawn, F38 noted. The import used the Editor token (F3). The schema deploy waits until the fetch ends, to keep memory free; the fetch was stopped once already by host memory pressure.
+
+## 2026-10-04T14:36Z — agent
+STATE: snapshot complete (32/32, 34 requests all 200, 0 nulls). All six trials ran with Holm, blinded; numbers committed by hash (lab/results/blinded-commitment.json), deterministic across two runs.
+BLOCKED_ON: owner, one action the design requires of a person: say "unblind". The spec's lifecycle is Analysed (blinded) -> Unblinded by a person, never by the agent. When you say it, I will read the results for the first time, publish them as computed whatever they show, and record who unblinded and when.
+
+Meanwhile (unblocked): GitHub release with the raw chunks, the Studio schema deploy, and /replicate.
+
+Note on the gate (item 6 of your list): I will not gate on the id namespace. In this project our robot token's engine id starts "g-" (entry 01:50Z; evidence in docs/BUILD_LOG.md), so a namespace gate admits robots as people. The gate is a named-curator allowlist via `$assigned`, plus a server-side check that uses Sanity's provider field. It meets the same goal (people only, never the agent), without the hole.

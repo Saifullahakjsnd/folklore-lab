@@ -293,13 +293,19 @@ function dailyTenths(s: PointSeries, date: string, tz: string): number {
   return sumTenths(s, accumulationStamps(start, end))
 }
 
-function h4(h: Hypothesis, data: TrialData, base: Pick<TrialResult, 'hypothesisId' | 'lockSha256' | 'slot'>): TrialResult {
+function checkH4(h: Hypothesis) {
   checkPeriod(h)
   const pred = obj(h.predictor, 'predictor')
   const out = obj(h.outcome, 'outcome')
   expectLock([pred.comparator, out.aggregation], ['>=', 'count of local days with daily precipitation >= 1 mm'], 'H4 definition')
   expectLock(obj(h.test, 'test').name, 'Mann-Whitney U', 'test.name')
   expectLock(obj(h.bootstrap, 'bootstrap').method, 'stratified bootstrap of years', 'bootstrap.method')
+}
+
+function h4Units(h: Hypothesis, data: TrialData): {wet: number[]; dry: number[]; excluded: number} {
+  checkH4(h)
+  const pred = obj(h.predictor, 'predictor')
+  const out = obj(h.outcome, 'outcome')
   const loc = obj(h.location, 'location')
   const tz = String(loc.timeZone)
   const s = point(h, data, String(loc._id))
@@ -318,6 +324,12 @@ function h4(h: Hypothesis, data: TrialData, base: Pick<TrialResult, 'hypothesisI
     const rainyDays = window.filter((v) => v >= rainyMin).length
     ;(swithin >= wetMin ? wet : dry).push(rainyDays)
   }
+  return {wet, dry, excluded}
+}
+
+function analyseGroups(h: Hypothesis, units: {wet: number[]; dry: number[]; excluded: number}, base: Pick<TrialResult, 'hypothesisId' | 'lockSha256' | 'slot'>): TrialResult {
+  checkH4(h)
+  const {wet, dry, excluded} = units
   if (wet.length === 0 || dry.length === 0) throw new TrialRefused(`${h._id}: a group is empty (wet ${wet.length}, dry ${dry.length})`)
   const mean = (xs: readonly number[]) => xs.reduce((a, b) => a + b, 0) / xs.length
   const bootstrap = obj(h.bootstrap, 'bootstrap')
@@ -343,12 +355,16 @@ function h4(h: Hypothesis, data: TrialData, base: Pick<TrialResult, 'hypothesisI
   }
 }
 
-function h5(h: Hypothesis, data: TrialData, base: Pick<TrialResult, 'hypothesisId' | 'lockSha256' | 'slot'>): TrialResult {
+function checkH5(h: Hypothesis) {
   checkPeriod(h)
   const out = obj(h.outcome, 'outcome')
   expectLock([out.variable, out.comparator], ['temperature_2m', '<'], 'H5 outcome')
   expectLock(obj(h.test, 'test').name, 'exact binomial test', 'test.name')
   expectLock(obj(h.effect, 'effect').nullValue, 50, 'effect.nullValue')
+}
+
+function h5Units(h: Hypothesis, data: TrialData): {hits: number[]; excluded: number; normal: number} {
+  checkH5(h)
   if (!data.groundhogCalls) throw new TrialRefused(`${h._id}: no record of Phil's calls supplied`)
   const loc = obj(h.location, 'location')
   const tz = String(loc.timeZone)
@@ -381,6 +397,12 @@ function h5(h: Hypothesis, data: TrialData, base: Pick<TrialResult, 'hypothesisI
     const cold = w < normal
     hits.push((call === 'shadow') === cold ? 1 : 0)
   }
+  return {hits, excluded, normal}
+}
+
+function analyseHits(h: Hypothesis, units: {hits: number[]; excluded: number; normal: number}, base: Pick<TrialResult, 'hypothesisId' | 'lockSha256' | 'slot'>): TrialResult {
+  checkH5(h)
+  const {hits, excluded, normal} = units
   const k = hits.reduce((a, b) => a + b, 0)
   const bootstrap = obj(h.bootstrap, 'bootstrap')
   const boot = stratifiedBootstrap([hits.length], num(bootstrap.resamples, 'resamples'), num(obj(bootstrap.prng, 'prng').seed, 'seed'), ([g]) => {
@@ -422,17 +444,50 @@ export function rateUnitsFor(hypothesis: Hypothesis, data: TrialData): {days: st
   return rate(hypothesis, data)
 }
 
-/** Run one trial. Refuses unless the hypothesis still matches its lock. */
+/**
+ * The per-unit table a trial's statistics are computed from: the bridge between the raw
+ * snapshot (weather -> units, needs the 118 MB snapshot) and lab/stats.ts (units -> numbers,
+ * runs offline in milliseconds). Serialisable, so /replicate can re-run the statistics from a
+ * cached table while CI re-derives the table itself from the raw snapshot.
+ */
+export type UnitTable =
+  | {kind: 'rate'; hypothesisId: string; firstDate: string; predictor: string; outcome: string; excluded: string}
+  | {kind: 'groups'; hypothesisId: string; wet: number[]; dry: number[]; excluded: number}
+  | {kind: 'hits'; hypothesisId: string; hits: number[]; excluded: number; normal: number}
+
+const bits = (a: Uint8Array) => Array.from(a, (v) => (v ? '1' : '0')).join('')
+const unbits = (s: string) => Uint8Array.from(s, (c) => (c === '1' ? 1 : 0))
+
+export function extractUnits(hypothesis: Hypothesis, data: TrialData): UnitTable {
+  const slot = slotOf(hypothesis._id)
+  const rate = RATE[slot]
+  if (rate) {
+    const {days, units} = rate(hypothesis, data)
+    return {kind: 'rate', hypothesisId: hypothesis._id, firstDate: days[0]!, predictor: bits(units.predictor), outcome: bits(units.outcome), excluded: bits(units.excluded)}
+  }
+  if (slot === 'hypothesis-st-swithins-day') return {kind: 'groups', hypothesisId: hypothesis._id, ...h4Units(hypothesis, data)}
+  if (slot === 'hypothesis-groundhog-day') return {kind: 'hits', hypothesisId: hypothesis._id, ...h5Units(hypothesis, data)}
+  throw new TrialRefused(`no runner for ${slot}`)
+}
+
+/** Statistics from a unit table. Refuses unless the hypothesis still matches its lock. */
+export async function analyseUnits(hypothesis: Hypothesis, lock: PreregistrationLock, table: UnitTable): Promise<TrialResult> {
+  const check = await checkLock(hypothesis, lock)
+  if (!check.ok) throw new TrialRefused(`${hypothesis._id}: ${check.reason}; file a deviation instead`)
+  if (table.hypothesisId !== hypothesis._id) throw new TrialRefused(`unit table is for ${table.hypothesisId}, not ${hypothesis._id}`)
+  const base = {hypothesisId: hypothesis._id, lockSha256: lock.sha256, slot: slotOf(hypothesis._id)}
+  if (table.kind === 'rate') {
+    return analyseRate(hypothesis, {predictor: unbits(table.predictor), outcome: unbits(table.outcome), excluded: unbits(table.excluded)}, base)
+  }
+  if (table.kind === 'groups') return analyseGroups(hypothesis, table, base)
+  return analyseHits(hypothesis, table, base)
+}
+
+/** Run one trial from the snapshot. Refuses unless the hypothesis still matches its lock. */
 export async function runTrial(hypothesis: Hypothesis, lock: PreregistrationLock, data: TrialData): Promise<TrialResult> {
   const check = await checkLock(hypothesis, lock)
   if (!check.ok) throw new TrialRefused(`${hypothesis._id}: ${check.reason}; file a deviation instead`)
-  const slot = slotOf(hypothesis._id)
-  const base = {hypothesisId: hypothesis._id, lockSha256: lock.sha256, slot}
-  const rate = RATE[slot]
-  if (rate) return analyseRate(hypothesis, rate(hypothesis, data).units, base)
-  if (slot === 'hypothesis-st-swithins-day') return h4(hypothesis, data, base)
-  if (slot === 'hypothesis-groundhog-day') return h5(hypothesis, data, base)
-  throw new TrialRefused(`no runner for ${slot}`)
+  return analyseUnits(hypothesis, lock, extractUnits(hypothesis, data))
 }
 
 /** Holm across the whole family, then the locked verdict rules. */

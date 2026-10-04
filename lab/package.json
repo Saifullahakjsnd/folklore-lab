@@ -7,7 +7,8 @@
     "./canonical": "./src/canonical.ts",
     "./hash": "./src/hash.ts",
     "./preregistration": "./src/preregistration.ts",
-    "./stats": "./src/stats.ts"
+    "./stats": "./src/stats.ts",
+    "./policy": "./src/policy.ts"
   },
   "scripts": {
     "typecheck": "tsc -p .",

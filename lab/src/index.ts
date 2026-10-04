@@ -4,3 +4,5 @@ export {checkLock, lockHypothesis, missingFields, REQUIRED_HYPOTHESIS_FIELDS} fr
 export type {LockCheck, PreregistrationLock} from './preregistration.ts'
 export {loadRegistry} from './registry.ts'
 export type {Deviation, Hypothesis, Registry, RegistryEntry} from './registry.ts'
+export {authorize, classifyActor, Forbidden, verdictBlockers} from './policy.ts'
+export type {ActorClass, LifecycleAction, VerdictCheckInput} from './policy.ts'

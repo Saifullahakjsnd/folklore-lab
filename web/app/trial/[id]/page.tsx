@@ -1,7 +1,8 @@
 import Link from 'next/link'
+import {Fragment} from 'react'
 import {notFound} from 'next/navigation'
 import {fetchPublic} from '../../../lib/sanity'
-import {FailureBanner, Hash, NoticeBanner, OpenMeteoCredit, Stamp} from '../../components'
+import {FailureBanner, formatP, Hash, NoticeBanner, OpenMeteoCredit, Stamp} from '../../components'
 
 export const revalidate = 60
 
@@ -17,7 +18,27 @@ interface TrialPage {
   deviations: {_id: string; whatChanged: string; reason: string; consequence: string; createdAt: string; dataSeenBeforeDeviation: boolean}[]
   errata: {_id: string; field: string; locked: string; correct: string; effect: string; whyNotADeviation: string}[]
   supersededBy: {_id: string; title: string} | null
-  trial: {stage: string; blinded: boolean; snapshot: {snapshotSha256: string; chunks: {queryUrl: string}[]} | null} | null
+  trial: {
+    stage: string
+    blinded: boolean
+    test: string
+    n: number
+    excluded: number
+    counts: {name: string; value: number}[]
+    statistic: number | null
+    p: number
+    adjustedP: number
+    effect: number
+    effectUnits: string
+    ciLow: number
+    ciHigh: number
+    nullValue: number
+    sesoi: number
+    computedVerdict: string
+    runAt: string
+    gitSha: string
+    snapshot: {snapshotSha256: string; chunks: {queryUrl: string; pointId: string; startDate: string}[]} | null
+  } | null
   verdict: {outcome: string; summary: string; caveats: string[]} | null
 }
 
@@ -28,7 +49,11 @@ const QUERY = `*[_type == "hypothesis" && _id == $id][0]{
   "deviations": *[_type == "deviation" && (hypothesisId == ^._id || supersededBy._ref == ^._id)]{_id, whatChanged, reason, consequence, createdAt, dataSeenBeforeDeviation},
   "errata": *[_type == "erratum" && hypothesisId == ^._id]{_id, field, locked, correct, effect, whyNotADeviation},
   "supersededBy": *[_type == "deviation" && hypothesisId == ^._id][0].supersededBy->{_id, title},
-  "trial": *[_type == "trial" && hypothesisId == ^._id] | order(runAt desc)[0]{stage, blinded, "snapshot": dataSnapshot->{snapshotSha256, chunks[]{queryUrl}}},
+  "trial": *[_type == "trial" && hypothesisId == ^._id] | order(runAt desc)[0]{
+    stage, blinded, test, n, excluded, counts[]{name, value}, statistic, p, adjustedP, effect, effectUnits, ciLow, ciHigh,
+    nullValue, sesoi, computedVerdict, runAt, gitSha,
+    "snapshot": dataSnapshot->{snapshotSha256, chunks[]{queryUrl, pointId, startDate}}
+  },
   "verdict": *[_type == "verdict" && trial->hypothesisId == ^._id][0]{outcome, summary, caveats}
 }`
 
@@ -50,7 +75,7 @@ export default async function TrialDetail({params}: {params: Promise<{id: string
       <p>
         <Link href="/journal">← Journal</Link>
       </p>
-      <Stamp verdict={h.verdict?.outcome ?? null} />
+      <Stamp verdict={h.verdict?.outcome ?? (h.trial && !h.trial.blinded ? h.trial.computedVerdict : null)} approved={Boolean(h.verdict)} />
       <h1>{h.title}</h1>
       <p className="lede">{h.statement}</p>
       {h.status === 'superseded' && (
@@ -130,33 +155,106 @@ export default async function TrialDetail({params}: {params: Promise<{id: string
       )}
 
       <section aria-labelledby="result">
-        <h2 id="result">Data and result</h2>
+        <h2 id="result">Result</h2>
         {!h.trial ? (
-          <NoticeBanner>No data has been fetched for this hypothesis yet.</NoticeBanner>
+          <NoticeBanner>No data has been analysed for this hypothesis.</NoticeBanner>
         ) : h.trial.blinded ? (
           <NoticeBanner>Analysed, but still blinded: results stay hidden until a person unblinds them.</NoticeBanner>
         ) : (
-          <>
-            {h.trial.snapshot && (
-              <p>
-                Data snapshot <Hash value={h.trial.snapshot.snapshotSha256} />, {h.trial.snapshot.chunks.length} checksummed downloads.
-              </p>
-            )}
-            <p>
-              <Link href={`/replicate/${h._id}`}>Replicate this trial from the cached snapshot</Link>
-            </p>
-            {h.verdict?.summary && <p>{h.verdict.summary}</p>}
-            {h.verdict?.caveats?.length ? (
-              <ul>
-                {h.verdict.caveats.map((c) => (
-                  <li key={c}>{c}</li>
-                ))}
-              </ul>
-            ) : null}
-          </>
+          <Result t={h.trial} id={h._id} definition={h.definition} />
         )}
+        {h.verdict?.summary && <p>{h.verdict.summary}</p>}
+        {h.verdict?.caveats?.length ? (
+          <ul>
+            {h.verdict.caveats.map((c) => (
+              <li key={c}>{c}</li>
+            ))}
+          </ul>
+        ) : null}
       </section>
       <OpenMeteoCredit />
     </main>
+  )
+}
+
+function Result({t, id, definition}: {t: NonNullable<TrialPage['trial']>; id: string; definition: string}) {
+  const d = JSON.parse(definition) as {predictor: {threshold?: unknown}; comparison: string; effect: {definition: string}}
+  const f = (v: number) => v.toFixed(2)
+  return (
+    <div className="side-by-side">
+      <div>
+        <h3>Locked before any data</h3>
+        <dl>
+          <dt>Comparison</dt>
+          <dd>{d.comparison}</dd>
+          <dt>Effect</dt>
+          <dd>{d.effect.definition}</dd>
+          <dt>Test</dt>
+          <dd>{t.test}</dd>
+          <dt>Null value</dt>
+          <dd>
+            {t.nullValue} {t.effectUnits}
+          </dd>
+          <dt>Smallest effect of interest</dt>
+          <dd>
+            {t.sesoi} {t.effectUnits}
+          </dd>
+        </dl>
+      </div>
+      <div>
+        <h3>What the data said</h3>
+        <dl>
+          <dt>Units analysed</dt>
+          <dd>
+            {t.n} ({t.excluded} excluded under the locked missing-data rule)
+          </dd>
+          {t.counts.map((c) => (
+            <Fragment key={c.name}>
+              <dt>{c.name}</dt>
+              <dd>{c.value}</dd>
+            </Fragment>
+          ))}
+          <dt>Effect [95% CI]</dt>
+          <dd>
+            <strong>
+              {f(t.effect)} {t.effectUnits}
+            </strong>{' '}
+            [{f(t.ciLow)}, {f(t.ciHigh)}]
+          </dd>
+          <dt>p</dt>
+          <dd>{formatP(t.p)}</dd>
+          <dt>Holm-adjusted p</dt>
+          <dd>{formatP(t.adjustedP)}</dd>
+          <dt>Verdict (locked rules)</dt>
+          <dd>
+            <strong>{t.computedVerdict}</strong>
+          </dd>
+          <dt>Computed</dt>
+          <dd>
+            {t.runAt}, git <code>{t.gitSha.slice(0, 12)}</code>
+          </dd>
+        </dl>
+        <p>
+          <Link href={`/replicate/${id}`}>Replicate these numbers in your browser</Link> from the cached data, no network needed.
+        </p>
+        {t.snapshot && (
+          <details>
+            <summary>
+              The data: snapshot <code className="hash">{t.snapshot.snapshotSha256.slice(0, 16)}…</code>, {t.snapshot.chunks.length} checksummed
+              downloads
+            </summary>
+            <ul>
+              {t.snapshot.chunks.map((c) => (
+                <li key={c.queryUrl}>
+                  <a href={c.queryUrl}>
+                    {c.pointId}, from {c.startDate}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </div>
+    </div>
   )
 }

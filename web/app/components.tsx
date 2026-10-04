@@ -25,10 +25,18 @@ const STAMP_CLASS: Record<string, string> = {
 }
 
 /** Verdict stamp. The text always carries the meaning; colour only reinforces it. */
-export function Stamp({verdict}: {verdict: string | null}) {
+export function Stamp({verdict, approved = true}: {verdict: string | null; approved?: boolean}) {
   if (!verdict) return <span className="stamp stamp-pending">Awaiting data</span>
-  return <span className={`stamp ${STAMP_CLASS[verdict] ?? ''}`}>{verdict}</span>
+  return (
+    <span className="stamp-wrap">
+      <span className={`stamp ${STAMP_CLASS[verdict] ?? ''}`}>{verdict}</span>
+      {!approved && <span className="stamp-note">computed by the locked rules; awaiting curator approval</span>}
+    </span>
+  )
 }
+
+/** p-values: never print an underflowed 0 as if it were a real zero. */
+export const formatP = (p: number) => (p === 0 ? '< 1e-300' : p < 0.001 ? p.toExponential(2) : p.toFixed(3))
 
 export function Hash({value}: {value: string}) {
   return (

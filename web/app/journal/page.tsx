@@ -1,11 +1,10 @@
 import Link from 'next/link'
 import {fetchPublic, JOURNAL_QUERY, type HypothesisRow} from '../../lib/sanity'
-import {FailureBanner, Hash, NoticeBanner, OpenMeteoCredit, Stamp} from '../components'
+import {FailureBanner, formatP, Hash, NoticeBanner, OpenMeteoCredit, Stamp} from '../components'
 
 export const revalidate = 60
 
 const fmt = (n: number, digits = 1) => n.toFixed(digits)
-const fmtP = (p: number) => (p < 0.001 ? p.toExponential(1) : p.toFixed(3))
 
 export default async function JournalPage() {
   const result = await fetchPublic<HypothesisRow[]>(JOURNAL_QUERY)
@@ -59,9 +58,9 @@ function Journal({rows}: {rows: HypothesisRow[]}) {
                 </th>
                 <td>{t ? t.n : '–'}</td>
                 <td>{t ? `${fmt(t.effect)} ${t.effectUnits} (${fmt(t.ciLow)} to ${fmt(t.ciHigh)})` : '–'}</td>
-                <td>{t ? fmtP(t.adjustedP) : '–'}</td>
+                <td>{t ? formatP(t.adjustedP) : '–'}</td>
                 <td>
-                  <Stamp verdict={r.verdict?.outcome ?? null} />
+                  <Stamp verdict={r.verdict?.outcome ?? (r.trial && !r.trial.blinded ? r.trial.computedVerdict : null)} approved={Boolean(r.verdict)} />
                 </td>
               </tr>
             )
@@ -71,7 +70,7 @@ function Journal({rows}: {rows: HypothesisRow[]}) {
       <ul className="cards">
         {rows.map((r) => (
           <li key={r._id} className="card">
-            <Stamp verdict={r.verdict?.outcome ?? null} />
+            <Stamp verdict={r.verdict?.outcome ?? (r.trial && !r.trial.blinded ? r.trial.computedVerdict : null)} approved={Boolean(r.verdict)} />
             <h2>
               <Link href={`/trial/${r._id}`}>{r.title}</Link>
             </h2>

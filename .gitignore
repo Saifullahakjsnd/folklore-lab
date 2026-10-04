@@ -42,3 +42,4 @@ ingest/data/results/
 ingest/data/fetch-run.log
 ingest/data/groundhog/*.html
 ingest/data/failed/
+.vercel

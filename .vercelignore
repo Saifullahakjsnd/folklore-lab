@@ -1,0 +1,17 @@
+**/node_modules
+.git
+.github
+.vercel
+ingest/data/raw
+ingest/data/failed
+ingest/data/results
+ingest/data/groundhog/*.html
+ingest/data/fetch-run.log
+studio/dist
+studio/.sanity
+web/.next
+*.log
+*.tmp
+.env
+.env.local
+.env.*.local

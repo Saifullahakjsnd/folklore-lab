@@ -4,6 +4,8 @@
 
 Six weather proverbs, each turned into a falsifiable hypothesis, **hashed and locked before any weather data was fetched**, then tested against 75 years (1950–2024) of hourly ERA5 reanalysis. The verdicts, with effect sizes and confidence intervals, are published in a public *Journal of Proverb Studies*.
 
+**Live journal: https://folklore-lab.vercel.app** (no login).
+
 Built for the Sanity Challenge on DEV, Path Two. The build log is the heart of the project: [`docs/BUILD_LOG.md`](docs/BUILD_LOG.md).
 
 ## Status
@@ -11,13 +13,13 @@ Built for the Sanity Challenge on DEV, Path Two. The build log is the heart of t
 | Piece | State |
 | --- | --- |
 | Six hypotheses locked (SHA-256) | Done, before any data. One deviation (red-sky v1 → v2) and one erratum, both filed before any data |
-| Weather snapshot | Fetcher built and tested offline; **not run yet** |
+| Weather snapshot | 32/32 chunks, 34 requests, all HTTP 200, zero nulls; GitHub release `snapshot-era5-hourly-1950-2024-v1` |
 | Statistics (`lab/stats.ts`) | Done; checked against SciPy/statsmodels reference values |
-| Trial runner | Done; tested on synthetic series only |
-| Sanity Studio schema | Done; not yet deployed |
+| Trials | 6/6 run blinded, results committed by hash before unblinding, reproduced 6/6 from raw (`node lab/scripts/reproduce.ts`) |
+| Sanity | Schema deployed; locks, snapshot and trials in the public dataset |
 | Workflows (`trialLifecycle`) | Passes the Workflows 0.36.0 test bench; not yet deployed |
-| Public site | Journal, trial, methods, pipeline, how-it-works |
-| CI reproduction of every trial | Waiting for the snapshot |
+| Public site | Live: journal, per-proverb pages, in-browser `/replicate`, methods, pipeline, how-it-works |
+| CI reproduction | Job written (`reproduce`); waiting on the `workflow` token scope to land |
 
 ## Layout
 

@@ -572,3 +572,9 @@ The first version of the page said "Differs", which is true bit for bit but misl
 - Floating-point values must agree within 1e-12 relative, and the page shows the largest difference observed.
 - The numbers hash is labelled as bit-exact and engine-sensitive.
 - **Bit-exact reproduction is CI's job**, run on the same engine as the published run (`.nvmrc` pins Node 24.12.0). Whether Linux CI matches the Windows run bit for bit will be known when CI runs; if it does not, that will be reported the same way.
+
+## 2026-10-05 — Live at https://folklore-lab.vercel.app
+
+- Vercel project `folklore-lab` (root `web/`, Next.js, Node 24.x), deployed from the monorepo root so `@folklore/lab` resolves. The build runs on Vercel, not on the memory-starved build machine. `.vercelignore` keeps raw data and secrets out of the upload.
+- Every page returns 200 to an anonymous visitor, with no login.
+- **Live `/replicate` result (Chrome):** "Reproduced in your browser in 9.7 s". Across all six trials every hash, count and verdict is identical, and every floating-point value is within 8.6e-15 relative of the published value.

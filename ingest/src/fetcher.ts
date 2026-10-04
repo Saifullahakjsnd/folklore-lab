@@ -210,7 +210,19 @@ export async function runFetch(
       throw new FetchAborted(`${chunk.url}: HTTP ${response.status} ${text}. Not retrying.`)
     }
     const body = new Uint8Array(await response.arrayBuffer())
-    const checked = validate(body, chunk, plan)
+    let checked: ReturnType<typeof validate>
+    try {
+      checked = validate(body, chunk, plan)
+    } catch (error) {
+      // Keep the rejected bytes so the failure can be diagnosed instead of retried blind.
+      const stem = join(dataDir, 'failed', `${new Date(startedAt).toISOString().replace(/[:.]/g, '-')}_${chunk.point._id}_${chunk.startDate}`)
+      writeAtomic(`${stem}.body`, body)
+      writeAtomic(
+        `${stem}.json`,
+        JSON.stringify({url: chunk.url, status: response.status, contentType: response.headers.get('content-type'), bytes: body.byteLength, error: (error as Error).message}, null, 2) + '\n',
+      )
+      throw error
+    }
     const meta: ChunkMeta = {
       pointId: chunk.point._id,
       startDate: chunk.startDate,

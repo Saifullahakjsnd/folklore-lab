@@ -1,4 +1,4 @@
-import {existsSync, mkdtempSync, readFileSync, writeFileSync} from 'node:fs'
+import {existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync} from 'node:fs'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {beforeEach, describe, expect, test} from 'vitest'
@@ -191,6 +191,9 @@ describe('runFetch', () => {
     const {deps} = harness((url) => new Response(fakeBody(url, {utc_offset_seconds: 3600}), {status: 200}))
     await expect(runFetch(plan, dir, deps, options)).rejects.toThrow(/expected UTC/)
     expect(existsSync(chunkPaths(dir, plan.chunks[0]!).data)).toBe(false)
+    const failed = readdirSync(join(dir, 'failed'))
+    expect(failed.filter((f) => f.endsWith('.body'))).toHaveLength(1)
+    expect(failed.filter((f) => f.endsWith('.json'))).toHaveLength(1)
   })
 
   test('an over-budget plan stops before any request', async () => {

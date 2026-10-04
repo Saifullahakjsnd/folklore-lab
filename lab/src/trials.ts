@@ -114,8 +114,11 @@ function analyseRate(h: Hypothesis, units: RateUnits, base: Pick<TrialResult, 'h
     for (let k = 0; k < indices.length; k++) {
       const i = indices[k]!
       if (units.excluded[i]) continue
-      if (units.predictor[i]) units.outcome[i] ? a++ : b++
-      else units.outcome[i] ? c++ : d++
+      if (units.predictor[i]) {
+        if (units.outcome[i]) a++
+        else b++
+      } else if (units.outcome[i]) c++
+      else d++
     }
     return {a, b, c, d}
   }

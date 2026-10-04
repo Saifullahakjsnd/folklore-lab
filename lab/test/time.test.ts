@@ -3,7 +3,6 @@ import {
   accumulationStamps,
   addDays,
   HOUR_MS,
-  hourInstants,
   instantsWithLocalTimeBetween,
   intlLocalParts,
   intlUtcOffset,

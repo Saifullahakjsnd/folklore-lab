@@ -1,6 +1,7 @@
 import {visionTool} from '@sanity/vision'
 import {defineConfig, type DocumentActionComponent} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import {ApproveVerdictAction} from './actions/approveVerdict'
 import {LockHypothesisAction} from './actions/lockHypothesis'
 import {dataset, projectId} from './env'
 import {APPEND_ONLY_TYPES, schemaTypes} from './schemaTypes'
@@ -30,7 +31,8 @@ export default defineConfig({
   document: {
     actions: (prev, {schemaType}) => {
       if (APPEND_ONLY_TYPES.includes(schemaType)) {
-        return prev.filter((action) => !REMOVE_ON_APPEND_ONLY.has(action.action ?? ''))
+        const kept = prev.filter((action) => !REMOVE_ON_APPEND_ONLY.has(action.action ?? ''))
+        return schemaType === 'trial' ? [ApproveVerdictAction, ...kept] : kept
       }
       if (schemaType === 'hypothesis') {
         const guarded = prev.map((action) => (['delete', 'unpublish'].includes(action.action ?? '') ? unlessLocked(action) : action))

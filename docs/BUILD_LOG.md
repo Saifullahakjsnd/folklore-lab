@@ -375,3 +375,5 @@ Tested on **synthetic series only**: 57 lab tests, including the six real locks 
 The owner ruled Option A (GUIDANCE 00:18Z). `lab/errata/erratum-ring-around-the-moon-v1-001.json` records that H6 labels the moon-altitude threshold "radians", while suncalc 2.1.0 reports degrees.
 
 **Why it is not a deviation:** the threshold is 0 and the comparator is `>`, so the predicate is identical in either unit, and no count, p-value or verdict can change. Deviation 001 was different in kind: unhashed coordinates *could* have changed results. Keeping that line sharp matters more than paper tidiness. The runner asserts the locked threshold is exactly 0, so the erratum's claim is enforced in code.
+
+**TypeScript pin changed: 5.9.3 → 6.0.3** (coordinator finding F35: TS 7 ships no JS API, and typescript-eslint supports only versions below 6.1). Re-verified: `pnpm -r typecheck` (7 packages), `next build` and `sanity build` all pass on 6.0.3.

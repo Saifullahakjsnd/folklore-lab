@@ -79,3 +79,17 @@ Done:
 - Tests: lab 46, ingest 11, all pass; one mutation check caught.
 
 Next (unblocked): the trial runner (lab/src/trials.ts). It turns a snapshot plus a locked hypothesis into counts, effect, p, CI and verdict, and is tested on synthetic series only. After that, the Studio schema.
+
+## 2026-10-04T00:30Z — agent
+STATE: trial runner done on synthetic data (57 lab tests); TypeScript now 6.0.3 per F35; weather fetch still not started.
+BLOCKED_ON: owner — repo visibility before the fetch (still private). Nothing else.
+
+Done since 00:10Z:
+- lab/src/trials.ts: six definitions; refuses unless the lock hash matches; asserts the lock structure against the code; Holm + verdicts across the family.
+- Time zones: "02:00" did not exist on 1950-04-16 (UK sprang forward at 02:00 until 1980). The H6 night is now selected by instants, as the lock wording says. The lock was right and my code was wrong. The per-zone transition table is checked against Intl.
+- H6 units: erratum recorded per your Option A ruling, with the not-a-deviation reasoning. File: lab/errata/.
+- F35 applied: typescript 6.0.3. Typecheck (7 packages), next build and sanity build all pass.
+- F33 noted. The approval gate (not built yet) will use the actor-ID namespace, never $actor.kind, plus a server-side check.
+- F34 noted. Event history will live in arrays inside documents, not one document per event.
+
+Next: Studio schema for the content model; then the fetch, as soon as the repo is public.

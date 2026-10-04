@@ -313,3 +313,38 @@ Measured agreement of suncalc 2.1.0:
 **A test failed, and the test was wrong.** In 1965 the moon was off by 0.17° even at large *negative* elevations. Horizons applies no refraction below the horizon, while suncalc keeps its near-horizon term. The tight tolerance now applies only above +5°. H6 uses only the sign of the altitude, and the sign agrees.
 
 Tests: lab 29 pass, ingest 11 pass.
+
+---
+
+## 2026-10-04 — Session 1 (cont.): `lab/stats.ts`, checked against SciPy and statsmodels
+
+`lab/src/stats.ts` is pure TypeScript with no dependencies:
+- Lanczos `lgamma`; `erfc` by a positive-term series below 2 and a Lentz continued fraction above;
+- Fisher's exact test, the exact binomial test, Mann-Whitney U (tie and continuity corrected), Holm, and quantile type 7;
+- the mulberry32 PRNG, a circular block bootstrap, and a stratified bootstrap;
+- the locked verdict rules as one function.
+
+**Reference values come from established libraries.** `lab/scripts/stats_fixtures.py`, run with Python 3.13.9, NumPy 2.3.5, SciPy 1.16.3 and statsmodels 0.14.5, writes `lab/test/fixtures/stats.json`. R is not installed here.
+
+**Where the model got stuck (statistics):** the locks name R semantics, and SciPy is not R in one place. `scipy.stats.fisher_exact` treats two tables as equally probable within a relative 1e-14, while R's `fisher.test` uses 1e-7. The fixture therefore rebuilds the R rule on SciPy's hypergeometric pmf and records `fisher_exact` alongside. They agree on all 10 tables (no near-ties occur). Where SciPy does match R as locked:
+- `binomtest` (its source uses `rerr = 1 + 1e-7`, as R does);
+- asymptotic `mannwhitneyu` with continuity correction (equals R `wilcox.test(exact = FALSE, correct = TRUE)`);
+- statsmodels Holm (equals R `p.adjust`);
+- NumPy's default `quantile` (equals type 7).
+
+**Agreement:**
+- p-values within 1e-9 relative, including a Fisher p of 9e-20 on a 27k-day table;
+- `lgamma` and the normal upper tail within 1e-12;
+- Holm within 1e-15.
+
+**Determinism:** the same seed gives an identical bootstrap; a different seed gives a different one. Blocks are 7 consecutive indices and wrap around. Undefined resamples are dropped and counted.
+
+**Verdict rules:** tested case by case, including "significant but below the smallest effect of interest → Not supported" (the owner-approved departure from the spec) and the Groundhog null of 50% with a smallest effect of interest of 60%.
+
+**Stuck, briefly:** `lgamma(1)` is exactly 0, so a purely relative tolerance failed on 9e-16 rounding. The test helper now takes an absolute floor.
+
+**Mutation check:** removing the Mann-Whitney continuity correction fails the reference test.
+
+Unrecorded detail now fixed in code before any data: the PRNG draw order. The circular bootstrap draws block starts in order. The stratified bootstrap fills group 0 then group 1 from one generator. Committed before the fetch.
+
+Tests: lab 46, ingest 11.

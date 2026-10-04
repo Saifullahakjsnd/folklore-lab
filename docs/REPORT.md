@@ -68,3 +68,14 @@ Findings worth sharing with the other builds:
 - suncalc 2.x returns degrees, not radians, has named exports and bundles its own types. @types/suncalc is for 1.x.
 
 Next (unblocked): lab/stats.ts (Fisher, Mann-Whitney, binomial, Holm, block bootstrap, seeded PRNG) with reference fixtures.
+
+## 2026-10-04T00:10Z — agent
+STATE: lab/stats.ts done and matches SciPy/statsmodels reference values; weather fetch still not started.
+BLOCKED_ON: owner — (1) repo visibility before the fetch (still private); (2) ruling on the H6 units erratum (entry 00:05Z). Neither blocks the work below.
+
+Done:
+- lab/src/stats.ts with reference fixtures lab/test/fixtures/stats.json, from lab/scripts/stats_fixtures.py (versions recorded inside).
+- One difference between SciPy and R: Fisher tie tolerance (1e-14 vs 1e-7). The fixture rebuilds R's rule; details in docs/BUILD_LOG.md.
+- Tests: lab 46, ingest 11, all pass; one mutation check caught.
+
+Next (unblocked): the trial runner (lab/src/trials.ts). It turns a snapshot plus a locked hypothesis into counts, effect, p, CI and verdict, and is tested on synthetic series only. After that, the Studio schema.

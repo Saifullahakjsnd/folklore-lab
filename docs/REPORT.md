@@ -138,3 +138,9 @@ What I did instead (mutation-checked: putting F33's gate back fails 4 of 8 bench
 - Server: robot = /users/me provider "sanity-token"; runtime and agent by exact id; people must be on a curator allowlist.
 
 Needed later from the owner (not blocking now): the curator account ids to allowlist, and dedicated runtime and agent tokens, so the agent cannot share the runtime's identity.
+
+## 2026-10-04T02:00Z — agent
+STATE: fetch -> load path complete and tested offline (lab/src/snapshot.ts verifies the manifest hash, every chunk's SHA-256 and hour-to-hour contiguity before any value is read); everything up to "run the trials on real data" is built.
+BLOCKED_ON: owner — unchanged: (1) repo visibility (blocks the fetch); (2) "import" go-ahead; (3) workflow scope for ci.yml. Later: curator ids to allowlist, separate runtime and agent tokens, Workflows and Dashboard org toggles.
+
+Once the repo is public, the remaining sequence is mechanical: fetch (about 2.25 h) -> upload raw chunks as release assets -> load and verify -> run the six trials -> Holm and verdicts (blinded until a curator unblinds) -> import.

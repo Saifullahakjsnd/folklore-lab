@@ -416,3 +416,29 @@ Bench tests (6), all passing:
 **Mutation check:** swapping in the naive `kind` gate fails 2 tests, and removing the runtime gate fails 1.
 
 `workflows/sanity.workflow.ts` passes `sanity-workflows deploy --check` (validation only, dataset not contacted). The real deploy needs Workflows enabled for the org, an owner toggle. All gates stay advisory, so the server routes must enforce them too.
+
+---
+
+## 2026-10-04 — Session 1 (cont.): F33's fix does not hold here; the gate is now an allowlist
+
+While building the server routes I checked what Sanity's `/users/me` returns for our robot (Editor) token, printing only id shapes, never names or emails:
+
+| Source | Robot token (provider `sanity-token`) | Human (project administrator) |
+| --- | --- | --- |
+| `/users/me` and project member `id` | `pp…` (no hyphen) | `p…` |
+| account-global `sanityUserId` | **`g-1…`** | `gR…` |
+| project member `isRobot` | true | false |
+
+The engine's `fetchActor` (read in `@sanity/workflow-engine` 0.36.0 `dist/index.js`) takes `$actor.id` from the account-global id. For our robot it bridges to the `sanityUserId`, so **the robot's `$actor.id` is `g-1…`**. The engine's own `classifyPrincipalId` treats any id starting `g` as global and only `p-` as robot. So the gate F33 recommends, `!string::startsWith($actor.id, "p-")`, **would admit this project's robot tokens as people**. My earlier bench tests passed only because I wrote the robot ids as `p-…`, copying F33's description instead of observing real ones.
+
+**Fix (no reliance on id shapes):**
+- **Workflow:** people are an *allowlist*. A workflow input `curators` (type `assignees`, user members only; the docs say robots cannot be assignment members) is copied into each person-gated activity's `seat` field with `fieldRead`. The action filter is `count($fields.seat[@.type == 'user']) > 0 && $assigned`, so only listed humans match, never a role alone. The runtime is matched by its exact engine-resolved id.
+- **Server (`lab/src/policy.ts`):** robots are recognised by Sanity's own `provider: "sanity-token"`. The runtime and agent are matched by exact id. People must also be on the curator allowlist.
+- **Studio Lock action:** the `p-` check is gone. It was meaningless, because Studio ids are project-scoped `p…` for humans too, and robot tokens cannot sign in to the Studio at all.
+
+**Tests:**
+- Bench, 8 tests: a `g-` robot cannot lock (and the test asserts F33's rule would have admitted it); a non-curator person cannot lock; a legacy `p-` robot with an admin role cannot lock.
+- **Mutation:** restoring F33's `p-` gate fails 4 of the 8.
+- Policy, 8 tests.
+
+**Limitation, stated plainly:** all of this is advisory against a raw write token. Hard enforcement would need dataset access control or custom roles in the Content Lake. A token with write access can still create a `preregistration` or `verdict` directly. The defence is detection: every verdict re-hashes against its lock, and CI recomputes everything.

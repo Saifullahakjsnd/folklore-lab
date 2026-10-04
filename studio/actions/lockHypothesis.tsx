@@ -9,6 +9,12 @@ type Preview = {ok: true; json: string; sha: string; version: number} | {ok: fal
 // Draft -> Pre-registered. Shows the canonical JSON and its hash before confirming, then
 // creates the preregistration document (create fails if one already exists: write-once)
 // and marks the hypothesis locked, in one transaction.
+//
+// Only people reach this action: the Studio needs an interactive login, which robot tokens
+// cannot do. (An earlier version tested user.id for a "p-" prefix, after coordinator finding
+// F33; that test is meaningless here, since Studio user ids are project-scoped "p…" ids for
+// humans too, and robots never get here.) The agent cannot lock because its token cannot sign
+// in; the server API routes and the workflow gate enforce the curator allowlist.
 export const LockHypothesisAction: DocumentActionComponent = (props) => {
   const {id, draft, published, onComplete} = props
   const client = useClient({apiVersion: '2026-06-09'})
@@ -44,17 +50,12 @@ export const LockHypothesisAction: DocumentActionComponent = (props) => {
   const status = String(published?.status ?? draft?.status ?? 'draft')
   if (status !== 'draft') return null
 
-  const isRobot = Boolean(user?.id.startsWith('p-'))
-  const blocked = Boolean(draft) || !published || isRobot
+  const blocked = Boolean(draft) || !published || !user
   return {
     label: 'Lock (pre-register)',
     tone: 'critical',
     disabled: blocked || busy,
-    title: isRobot
-      ? 'Only a person can lock a hypothesis'
-      : draft || !published
-        ? 'Publish first: only the published version can be locked'
-        : 'Hash the definition and lock it before any data is seen',
+    title: draft || !published ? 'Publish first: only the published version can be locked' : 'Hash the definition and lock it before any data is seen',
     onHandle: () => setOpen(true),
     dialog: open
       ? {
@@ -83,7 +84,7 @@ export const LockHypothesisAction: DocumentActionComponent = (props) => {
             setPreview(null)
           },
           onConfirm: async () => {
-            if (!preview?.ok || !user || isRobot) return
+            if (!preview?.ok || !user) return
             setBusy(true)
             try {
               await client

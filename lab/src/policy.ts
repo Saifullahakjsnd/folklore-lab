@@ -1,31 +1,47 @@
 // Server-side enforcement of who may do what. Workflow guards are advisory (a write token
 // bypasses them), so every mutating API route calls these functions first.
 //
-// Identity comes from the caller's own Sanity token, resolved server-side (never from a
-// request field). Robot tokens have ids starting "p-" (F33: an actor's self-reported kind
-// is not trustworthy). The runtime and the agent are robot tokens with known ids.
+// Identity comes from the caller's own Sanity token, resolved server-side via /users/me
+// (never from a request field). A robot token is recognised by Sanity's own report,
+// provider "sanity-token", not by the shape of its id: in this project a robot's
+// account-global id starts "g-", so F33's "p-" prefix rule would class robots as people
+// (verified 2026-10-04). People must also be named curators (an allowlist).
 import {canonicalize} from './canonical.ts'
 import {sha256Hex} from './hash.ts'
 
-export type ActorClass = 'person' | 'runtime' | 'agent' | 'unknown-robot'
+export type ActorClass = 'curator' | 'person' | 'runtime' | 'agent' | 'unknown-robot'
 
-export function classifyActor(id: string, known: {runtimeId: string; agentId: string}): ActorClass {
-  if (!id) throw new Error('empty actor id')
-  if (id === known.runtimeId) return 'runtime'
-  if (id === known.agentId) return 'agent'
-  return id.startsWith('p-') ? 'unknown-robot' : 'person'
+/** The caller as Sanity's /users/me reports it for their token. */
+export interface Caller {
+  id: string
+  provider: string | undefined
+}
+
+export interface KnownActors {
+  runtimeId: string
+  agentId: string
+  curatorIds: readonly string[]
+}
+
+export function classifyActor(caller: Caller, known: KnownActors): ActorClass {
+  if (!caller.id) throw new Error('empty actor id')
+  const robot = caller.provider === 'sanity-token'
+  if (robot && caller.id === known.runtimeId) return 'runtime'
+  if (robot && caller.id === known.agentId) return 'agent'
+  if (robot) return 'unknown-robot'
+  return known.curatorIds.includes(caller.id) ? 'curator' : 'person'
 }
 
 export type LifecycleAction = 'propose' | 'lock' | 'record-fetch' | 'record-analysis' | 'hash-mismatch' | 'unblind' | 'approve-verdict'
 
 const ALLOWED: Record<LifecycleAction, readonly ActorClass[]> = {
-  propose: ['person', 'agent'],
-  lock: ['person'],
+  propose: ['curator', 'person', 'agent'],
+  lock: ['curator'],
   'record-fetch': ['runtime'],
   'record-analysis': ['runtime'],
   'hash-mismatch': ['runtime'],
-  unblind: ['person'],
-  'approve-verdict': ['person'],
+  unblind: ['curator'],
+  'approve-verdict': ['curator'],
 }
 
 export class Forbidden extends Error {}

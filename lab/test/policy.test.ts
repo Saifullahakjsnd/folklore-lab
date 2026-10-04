@@ -3,14 +3,24 @@ import {canonicalize} from '../src/canonical.ts'
 import {sha256Hex} from '../src/hash.ts'
 import {authorize, classifyActor, Forbidden, verdictBlockers, type VerdictCheckInput} from '../src/policy.ts'
 
-const known = {runtimeId: 'p-runtime01', agentId: 'p-agent01'}
+// Ids as the server sees them from /users/me (project-scoped: our robot is "pp…", a human "p…"). Robots are
+// told apart by provider "sanity-token", never by id shape.
+const known = {runtimeId: 'ppruntime1', agentId: 'ppagent01', curatorIds: ['pCurator1']}
+const robot = (id: string) => ({id, provider: 'sanity-token'})
+const human = (id: string) => ({id, provider: 'google'})
 
 describe('who may act (server-side, not advisory)', () => {
-  test('classification uses the id, never a self-reported kind', () => {
-    expect(classifyActor('gCurator01', known)).toBe('person')
-    expect(classifyActor('p-runtime01', known)).toBe('runtime')
-    expect(classifyActor('p-agent01', known)).toBe('agent')
-    expect(classifyActor('p-someOtherRobot', known)).toBe('unknown-robot')
+  test("classification uses Sanity's own provider report and exact ids, never an id prefix or a self-reported kind", () => {
+    expect(classifyActor(human('pCurator1'), known)).toBe('curator')
+    expect(classifyActor(human('pVisitor2'), known)).toBe('person')
+    expect(classifyActor(robot('ppruntime1'), known)).toBe('runtime')
+    expect(classifyActor(robot('ppagent01'), known)).toBe('agent')
+    expect(classifyActor(robot('ppother99'), known)).toBe('unknown-robot')
+  })
+
+  test("a robot carrying a curator's id, or the runtime id without being a robot, gains nothing", () => {
+    expect(classifyActor(robot('pCurator1'), known)).toBe('unknown-robot')
+    expect(classifyActor(human('ppruntime1'), known)).toBe('person')
   })
 
   test('the agent can propose but never lock, unblind or approve', () => {
@@ -18,9 +28,10 @@ describe('who may act (server-side, not advisory)', () => {
     for (const action of ['lock', 'unblind', 'approve-verdict'] as const) expect(() => authorize(action, 'agent')).toThrow(Forbidden)
   })
 
-  test('only people lock, unblind and approve; only the runtime records fetches and analyses', () => {
+  test('only named curators lock, unblind and approve; only the runtime records fetches and analyses', () => {
     for (const action of ['lock', 'unblind', 'approve-verdict'] as const) {
-      expect(() => authorize(action, 'person')).not.toThrow()
+      expect(() => authorize(action, 'curator')).not.toThrow()
+      expect(() => authorize(action, 'person')).toThrow(Forbidden)
       expect(() => authorize(action, 'runtime')).toThrow(Forbidden)
       expect(() => authorize(action, 'unknown-robot')).toThrow(Forbidden)
     }

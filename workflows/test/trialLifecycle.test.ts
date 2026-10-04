@@ -3,10 +3,14 @@ import {createBench, subjectField} from '@sanity/workflow-engine-test'
 import {describe, expect, test} from 'vitest'
 import {trialLifecycle} from '../src/trialLifecycle.ts'
 
-const person: Actor = {kind: 'person', id: 'gCurator01', roles: ['editor']}
-const runtime: Actor = {kind: 'person', id: 'p-runtime01', roles: ['editor']} // robot token; the engine labels it "person" (F33)
-const agent: Actor = {kind: 'agent', id: 'p-agent01', roles: ['editor']}
-const robotClaimingPerson: Actor = {kind: 'person', id: 'p-agent01', roles: ['editor']}
+// Id shapes as observed in this project (2026-10-04): a human's account-global id is "g" +
+// letters; a robot token resolves to a sanityUserId starting "g-". Legacy robots use "p-".
+const person: Actor = {kind: 'person', id: 'gRcurator01', roles: ['administrator']}
+const otherPerson: Actor = {kind: 'person', id: 'gRvisitor02', roles: ['editor']}
+const runtime: Actor = {kind: 'person', id: 'g-1runtime01', roles: ['editor']} // robot; the engine labels it "person" (F33)
+const agent: Actor = {kind: 'agent', id: 'g-1agent01', roles: ['editor']}
+const robotClaimingPerson: Actor = {kind: 'person', id: 'g-1agent01', roles: ['editor']}
+const legacyRobot: Actor = {kind: 'person', id: 'p-legacy01', roles: ['administrator']}
 
 async function start() {
   const hypothesis = {_id: 'hypothesis-rain-before-seven-v1', _type: 'hypothesis', title: 'Rain before seven'}
@@ -14,7 +18,11 @@ async function start() {
   await bench.deployDefinitions({expectedMinReaderModel: 10, definitions: [trialLifecycle]})
   const {instance} = await bench.startInstance({
     definition: 'trial-lifecycle',
-    initialFields: [subjectField(hypothesis._id, {type: 'hypothesis'}), {type: 'string', name: 'runtimeActorId', value: runtime.id}],
+    initialFields: [
+      subjectField(hypothesis._id, {type: 'hypothesis'}),
+      {type: 'string', name: 'runtimeActorId', value: runtime.id},
+      {type: 'assignees', name: 'curators', value: [{type: 'user', id: person.id}]},
+    ],
   })
   const fire = (activity: string, action: string, actor: Actor) => bench.fireAction({instanceId: instance._id, activity, action, actor})
   const allowed = async (action: string, actor: Actor) => {
@@ -44,6 +52,20 @@ describe('trialLifecycle on the Workflows 0.36.0 test bench', () => {
     const t = await start()
     expect(await t.allowed('lock', agent)).toBe(false)
     await expect(t.fire('lock', 'lock', agent)).rejects.toBeInstanceOf(ActionDisabledError)
+    expect(await t.stage()).toBe('draft')
+  })
+
+  test('a robot whose engine id starts "g-" (as ours do) cannot lock, even though the F33 "p-" test would admit it', async () => {
+    const t = await start()
+    expect(runtime.id.startsWith('p-')).toBe(false) // F33's gate would have classed this robot as a person
+    expect(await t.allowed('lock', runtime)).toBe(false)
+    await expect(t.fire('lock', 'lock', runtime)).rejects.toBeInstanceOf(ActionDisabledError)
+  })
+
+  test('a person who is not a named curator cannot lock; neither can a legacy p- robot with a high role', async () => {
+    const t = await start()
+    await expect(t.fire('lock', 'lock', otherPerson)).rejects.toBeInstanceOf(ActionDisabledError)
+    await expect(t.fire('lock', 'lock', legacyRobot)).rejects.toBeInstanceOf(ActionDisabledError)
     expect(await t.stage()).toBe('draft')
   })
 
@@ -81,7 +103,11 @@ describe('trialLifecycle on the Workflows 0.36.0 test bench', () => {
     await expect(
       t.bench.startInstance({
         definition: 'trial-lifecycle',
-        initialFields: [subjectField('hypothesis-rain-before-seven-v1', {type: 'hypothesis'}), {type: 'string', name: 'runtimeActorId', value: runtime.id}],
+        initialFields: [
+          subjectField('hypothesis-rain-before-seven-v1', {type: 'hypothesis'}),
+          {type: 'string', name: 'runtimeActorId', value: runtime.id},
+          {type: 'assignees', name: 'curators', value: [{type: 'user', id: person.id}]},
+        ],
       }),
     ).rejects.toThrow()
   })

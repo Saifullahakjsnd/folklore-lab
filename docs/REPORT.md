@@ -126,3 +126,15 @@ Done since 01:00Z:
 - README with a CI badge (the badge goes live once ci.yml lands).
 
 Next (unblocked): the server API routes (lock / unblind / approve / replicate) using lab/src/policy.ts, and /replicate.
+
+## 2026-10-04T01:50Z — agent
+STATE: approval gate rebuilt as a curator allowlist after finding that F33's "p-" rule fails for this project's robot tokens; bench 8/8, lab 65, lint clean.
+BLOCKED_ON: owner — unchanged: (1) repo visibility; (2) "import" go-ahead; (3) workflow scope for .github/workflows/ci.yml.
+
+**Correction to F33, worth passing to the other builds.** In this project, the robot (Editor) token's account-global sanityUserId starts "g-". Its /users/me id is "pp…", and its project member record has isRobot true. The engine's fetchActor bridges to that sanityUserId, so $actor.id for our robot is "g-1…". The engine's own classifier treats a leading "g" as global and only "p-" as robot. `!string::startsWith($actor.id, "p-")` would therefore admit our robots as people. Shapes only were observed (no names); details are in docs/BUILD_LOG.md.
+
+What I did instead (mutation-checked: putting F33's gate back fails 4 of 8 bench tests):
+- Workflow: people gate = named curators in an `assignees` field (robots cannot be members), matched with `$assigned` through user members only. Runtime = exact engine-resolved id.
+- Server: robot = /users/me provider "sanity-token"; runtime and agent by exact id; people must be on a curator allowlist.
+
+Needed later from the owner (not blocking now): the curator account ids to allowlist, and dedicated runtime and agent tokens, so the agent cannot share the runtime's identity.

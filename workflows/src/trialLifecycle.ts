@@ -5,14 +5,20 @@
 // the agent may only draft. Gates sit on action filters, the caller-bound site.
 //
 // F33 (Workflows 0.36.0): the engine reports every resolved actor as kind "person", robot
-// tokens included, so `$actor.kind == "person"` gates nothing. The working discriminator is
-// the id namespace: robot tokens have ids starting "p-". The agent and the runtime both run
-// on robot tokens. The runtime is told apart by its exact token id, supplied at start.
-// All of this is advisory: the server routes enforce the same rules (guards can be bypassed).
+// tokens included, so `$actor.kind == "person"` gates nothing. F33's suggested fix, an id
+// prefix test for "p-", does NOT hold in this project: the engine resolves our robot token
+// to its account-global sanityUserId, which starts "g-" (verified against the project's own
+// user directory, 2026-10-04). So people are gated by an ALLOWLIST instead: named human
+// curators in an `assignees` field (robots cannot be assignment members), matched with
+// $assigned, and only through user members, never through a role. The runtime is matched by
+// its exact engine-resolved id, supplied at start. All advisory: the server enforces the same.
 import {defineAction, defineActivity, defineField, defineStage, defineTransition, defineWorkflow} from '@sanity/workflow-engine/define'
 
-export const PERSON_ONLY = '!string::startsWith($actor.id, "p-")'
+export const PERSON_ONLY = "count($fields.seat[@.type == 'user']) > 0 && $assigned"
 export const RUNTIME_ONLY = '$actor.id == $fields.runtimeActorId'
+
+/** Activity-scoped copy of the curators, so $assigned can match them. */
+const seat = defineField({type: 'assignees', name: 'seat', initialValue: {type: 'fieldRead', field: 'curators', scope: 'workflow'}})
 
 const toAbandoned = defineTransition({name: 'to-abandoned', title: 'Deviation filed', to: 'abandoned', when: '$anyActivityFailed'})
 
@@ -32,7 +38,8 @@ export const trialLifecycle = defineWorkflow({
   start: {requirements: [{type: 'singleSubject', name: 'one-open-trial', title: 'A trial is already open for this hypothesis'}]},
   fields: [
     defineField({type: 'subject', name: 'subject', title: 'Hypothesis', required: true, initialValue: {type: 'input'}}),
-    defineField({type: 'string', name: 'runtimeActorId', title: 'Runtime token id', required: true, initialValue: {type: 'input'}}),
+    defineField({type: 'string', name: 'runtimeActorId', title: 'Runtime token id (engine-resolved)', required: true, initialValue: {type: 'input'}}),
+    defineField({type: 'assignees', name: 'curators', title: 'Curators (named people)', required: true, initialValue: {type: 'input'}}),
   ],
   stages: [
     defineStage({
@@ -42,6 +49,7 @@ export const trialLifecycle = defineWorkflow({
         defineActivity({
           name: 'lock',
           title: 'Lock the pre-registration',
+          fields: [seat],
           actions: [defineAction({name: 'lock', title: 'Lock', filter: PERSON_ONLY, status: 'done'})],
         }),
       ],
@@ -78,6 +86,7 @@ export const trialLifecycle = defineWorkflow({
         defineActivity({
           name: 'unblind',
           title: 'Reveal the results',
+          fields: [seat],
           actions: [defineAction({name: 'unblind', title: 'Unblind', filter: PERSON_ONLY, status: 'done'}), hashMismatch],
         }),
       ],
@@ -90,6 +99,7 @@ export const trialLifecycle = defineWorkflow({
         defineActivity({
           name: 'approve',
           title: 'Approve the verdict the locked rules produced',
+          fields: [seat],
           actions: [defineAction({name: 'approve-verdict', title: 'Approve verdict', filter: PERSON_ONLY, status: 'done'}), hashMismatch],
         }),
       ],

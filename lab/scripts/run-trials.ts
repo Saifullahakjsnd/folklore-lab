@@ -22,7 +22,10 @@ const registry = await loadRegistry(labDir)
 if (registry.failures.length > 0) throw new Error(`Refusing: lock failures ${JSON.stringify(registry.failures)}`)
 
 const {manifest, series} = await loadSnapshot(dataDir)
-const lockManifest = JSON.parse(readFileSync(join(labDir, 'preregistration', 'manifest.json'), 'utf8')) as {manifestSha256: string}
+const lockManifest = JSON.parse(readFileSync(join(labDir, 'preregistration', 'manifest.json'), 'utf8')) as {
+  manifestSha256: string
+  environment: {draftingModel: {model: string; version: string}}
+}
 if (manifest.lockManifestSha256 !== lockManifest.manifestSha256) {
   throw new Error('Refusing: the snapshot was fetched under a different lock manifest than the current one')
 }
@@ -55,6 +58,9 @@ const body = {
   gitSha: execSync('git rev-parse HEAD', {cwd: labDir}).toString().trim(),
   snapshotSha256: manifest.snapshotSha256,
   lockManifestSha256: manifest.lockManifestSha256,
+  node: process.version,
+  // No model computes anything here; recorded because the spec asks every result to carry it.
+  draftingModel: lockManifest.environment.draftingModel,
   family: complete ? finaliseFamily(results, familySlots) : null,
   trials: results,
   refused,

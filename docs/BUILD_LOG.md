@@ -377,3 +377,42 @@ The owner ruled Option A (GUIDANCE 00:18Z). `lab/errata/erratum-ring-around-the-
 **Why it is not a deviation:** the threshold is 0 and the comparator is `>`, so the predicate is identical in either unit, and no count, p-value or verdict can change. Deviation 001 was different in kind: unhashed coordinates *could* have changed results. Keeping that line sharp matters more than paper tidiness. The runner asserts the locked threshold is exactly 0, so the erratum's claim is enforced in code.
 
 **TypeScript pin changed: 5.9.3 → 6.0.3** (coordinator finding F35: TS 7 ships no JS API, and typescript-eslint supports only versions below 6.1). Re-verified: `pnpm -r typecheck` (7 packages), `next build` and `sanity build` all pass on 6.0.3.
+
+---
+
+## 2026-10-04 — Session 1 (cont.): Studio schema, and the Workflows spike succeeds on the bench
+
+### Studio schema (`studio/schemaTypes`)
+
+Ten types. The design choice that matters: **`hypothesis.definition` is the full locked JSON as one text field.** The locked definitions mix types (some thresholds are numbers, some strings, some null), and Sanity arrays add `_key`s, so a field-by-field Sanity copy would never re-hash to the lab's lock. One JSON field is hashed exactly as the lab hashes it. Readable fields (title, statement, proverb and location references) sit beside it for display and querying.
+
+- The whole hypothesis document is read-only once `status` leaves `draft`. Delete and unpublish disappear once it is locked.
+- **Lock action:** shows the canonical JSON and SHA-256 before confirming. It then creates the `preregistration` (create fails if one exists, so it is write-once) and sets the status, in one transaction. It refuses robot tokens by the `p-` id prefix.
+- `preregistration`, `deviation`, `erratum`, `dataSnapshot` and `trial` are append-only: no delete, unpublish, duplicate or publish actions.
+- `verdict` validation: the trial's lock hash must equal its preregistration's hash, the trial must not be blinded, and the outcome must equal the code's computed verdict.
+- F34 (document cap): the 32 snapshot chunks and the trial's stage history are arrays inside one document each.
+- The production dataset's ACL is **public**, so importing publishes the locks. `studio/import/preregistration.ndjson` (26 documents) is built and verified but **not imported**; that waits on the owner.
+
+### Workflows spike: passed, no fallback needed (so far)
+
+The spec's 2-hour spike: install the engine and run one definition through its test bench. Done in well under the timebox, on `@sanity/workflow-engine` and `@sanity/workflow-engine-test` 0.36.0.
+
+`workflows/src/trialLifecycle.ts` has the stages Draft → Pre-registered → Data fetched → Analysed (blinded) → Unblinded → Verdict approved, plus Abandoned from any stage after lock.
+
+**Where the model would have got stuck without F33:** the obvious gate, `$actor.kind == "person"`, gates nothing. The engine relabels every actor as a person. I confirmed it on the bench: with that gate, an actor passed as `kind: 'agent'` could lock. The gate used instead:
+- people: `!string::startsWith($actor.id, "p-")` (robot tokens have `p-` ids);
+- runtime: `$actor.id == $fields.runtimeActorId` (an exact token id supplied at start), so neither a person nor the agent can impersonate it.
+
+Gates sit on action `filter`s, the caller-bound site. Transition `when` conditions are caller-blind by design (Workflows conditions docs).
+
+Bench tests (6), all passing:
+- the happy path;
+- the agent cannot lock;
+- a robot claiming `kind: 'person'` cannot lock or approve, and neither can the runtime;
+- a person cannot perform runtime steps, and the agent cannot impersonate the runtime;
+- a hash mismatch moves the trial to Abandoned;
+- only one open trial per hypothesis (single-subject start requirement).
+
+**Mutation check:** swapping in the naive `kind` gate fails 2 tests, and removing the runtime gate fails 1.
+
+`workflows/sanity.workflow.ts` passes `sanity-workflows deploy --check` (validation only, dataset not contacted). The real deploy needs Workflows enabled for the org, an owner toggle. All gates stay advisory, so the server routes must enforce them too.

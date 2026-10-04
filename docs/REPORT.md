@@ -107,3 +107,10 @@ Done:
 - Dataset today holds only 12 system documents (checked by id and type; none are ours).
 
 Next (unblocked): the Workflows spike on the in-memory test bench (needs no org enablement). The person-only approval gate will use the actor-id namespace, as F33 says.
+
+## 2026-10-04T01:00Z — agent
+STATE: Workflows spike passed on the bench (trialLifecycle, 6 tests, gate per F33); definition validated with deploy --check; nothing deployed.
+BLOCKED_ON: owner — (1) repo visibility (blocks the fetch); (2) "import" go-ahead for the public dataset (00:45Z entry); (3) when ready: enable Workflows for the org, then I deploy trialLifecycle. Work continues meanwhile.
+
+- F33 independently confirmed on the bench: with `$actor.kind == "person"` as the gate, an actor passed as kind "agent" could lock. The engine relabels it. My gate uses `!string::startsWith($actor.id, "p-")` for people and an exact runtime token id for runtime steps. Mutation-checked.
+- No fallback needed so far. The server-side enforcement of the same rules is still to build (the next item, with the web API routes).

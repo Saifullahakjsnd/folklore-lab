@@ -6,6 +6,7 @@
     "typecheck": "tsc -p ."
   },
   "dependencies": {
+    "@folklore/lab": "workspace:*",
     "@sanity/sdk": "3.7.0",
     "@sanity/sdk-react": "3.7.0",
     "react": "^19.3.0",

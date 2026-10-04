@@ -7,6 +7,8 @@ export default defineCliConfig({
   app: {
     organizationId: process.env.SANITY_ORG_ID ?? '',
     entry: './src/App.tsx',
+    title: 'Folklore Lab Bench',
   },
   server: {port},
+  deployment: {appId: 'kwdguc66v0akx78kq5m0apbl'},
 })

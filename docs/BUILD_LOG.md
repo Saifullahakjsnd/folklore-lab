@@ -578,3 +578,12 @@ The first version of the page said "Differs", which is true bit for bit but misl
 - Vercel project `folklore-lab` (root `web/`, Next.js, Node 24.x), deployed from the monorepo root so `@folklore/lab` resolves. The build runs on Vercel, not on the memory-starved build machine. `.vercelignore` keeps raw data and secrets out of the upload.
 - Every page returns 200 to an anonymous visitor, with no login.
 - **Live `/replicate` result (Chrome):** "Reproduced in your browser in 9.7 s". Across all six trials every hash, count and verdict is identical, and every floating-point value is within 8.6e-15 relative of the published value.
+
+---
+
+## 2026-10-05 — Workflow and Lab Bench deployed, without touching a sibling's login
+
+- **Where it nearly went wrong:** the machine already had a Sanity CLI login in `~/.config/sanity`. Checked before use (ids and providers only, no names): a GitHub account for a **different** org (`ojpmneh29`) and project, almost certainly a sibling build's. A plain `sanity login` would have overwritten it mid-work.
+- **Fix:** `@sanity/cli-core` reads `SANITY_CLI_CONFIG_PATH` (`getCliUserConfigPath`), so this project's login lives in `folklore-lab/.sanity-cli/config.json` (gitignored, excluded from Vercel). The agent started `sanity login --provider github --no-open`, and the owner signed in from a private window. Verified before use: org `omdlbkvbu`, project `1jioj3uy`, human account id; the sibling's session untouched.
+- `sanity-workflows deploy`: a dry run first (one new definition, nothing else touched), then **created `trial-lifecycle` v1** in `1jioj3uy.production`. This is the F38 step the project-scoped token could not do.
+- **Lab Bench deployed** to the Sanity Dashboard ("Folklore Lab Bench"). So **the Dashboard is enabled for the org**; no toggle needed.

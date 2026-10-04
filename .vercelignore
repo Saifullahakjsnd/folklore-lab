@@ -15,3 +15,4 @@ web/.next
 .env
 .env.local
 .env.*.local
+.sanity-cli

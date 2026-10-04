@@ -73,7 +73,7 @@ Built with **Claude Code** (Claude Opus 5.5) as the agent, in the open: a coordi
 - A hash mismatch moves a trial to Abandoned.
 - The obvious gate, `$actor.kind == "person"`, **gates nothing**: the engine labels robots as people. The commonly suggested fix ("ids starting `p-` are robots") fails in this project too, because our robot tokens resolve to `g-…` ids. The gate is a named-curator allowlist, and the server enforces the same rule.
 
-Status: TODO (deployed / not deployed).
+**Deployed:** `trial-lifecycle` v1 runs on the project's production dataset. The **Lab Bench** (an App SDK app in the Sanity Dashboard: live stage board, lock view with the hash recomputed in the browser, approve button, deviation log) needs a login; every view has a public mirror (`/pipeline`, `/trial/[id]`).
 
 **What I cut:** TODO.
 

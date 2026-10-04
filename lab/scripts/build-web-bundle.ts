@@ -13,6 +13,7 @@ const results = JSON.parse(readFileSync(join(labDir, 'results', 'trials-4dc5ac6e
   snapshotSha256: string
   gitSha: string
   runAt: string
+  node: string
   family: FamilyResult[]
 }
 const commitment = JSON.parse(readFileSync(join(labDir, 'results', 'blinded-commitment.json'), 'utf8')) as {numbersSha256: string}
@@ -35,6 +36,7 @@ const bundle = {
   numbersSha256: commitment.numbersSha256,
   resultsGitSha: results.gitSha,
   resultsRunAt: results.runAt,
+  resultsNode: results.node,
   familySlots: (registry.active[0]!.hypothesis.correctionFamily as {members: string[]}).members.map(slotOf),
   trials,
 }

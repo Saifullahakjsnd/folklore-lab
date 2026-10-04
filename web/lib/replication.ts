@@ -16,6 +16,7 @@ export interface ReplicationBundle {
   numbersSha256: string
   resultsGitSha: string
   resultsRunAt: string
+  resultsNode: string
   familySlots: string[]
   trials: ReplicationTrial[]
 }
@@ -25,5 +26,3 @@ export type WorkerMessage =
   | {type: 'done'; family: FamilyResult[]; numbersSha256: string; ms: number}
   | {type: 'error'; message: string}
 
-/** The fields compared between published and recomputed results. */
-export const COMPARED: (keyof FamilyResult)[] = ['n', 'excluded', 'p', 'adjustedP', 'effect', 'ciLow', 'ciHigh', 'verdict']

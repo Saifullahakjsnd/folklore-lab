@@ -54,9 +54,9 @@ export default async function ReplicatePage({params}: {params: Promise<{id: stri
       </p>
       <Replicator
         hypothesisId={id}
-        published={trial.published}
+        published={bundle.trials.map((t) => t.published)}
         committedNumbersSha256={bundle.numbersSha256}
-        trialIds={bundle.trials.map((t) => t.hypothesis._id)}
+        publishedNode={`the Node ${bundle.resultsNode} run that produced the published numbers`}
       />
       <OpenMeteoCredit />
     </main>

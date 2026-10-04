@@ -2,25 +2,60 @@
 
 import type {FamilyResult} from '@folklore/lab/trials'
 import {useEffect, useRef, useState} from 'react'
-import {COMPARED, type WorkerMessage} from '../../../lib/replication'
+import type {WorkerMessage} from '../../../lib/replication'
 
 interface Props {
   hypothesisId: string
-  published: FamilyResult
+  published: FamilyResult[]
   committedNumbersSha256: string
-  trialIds: string[]
+  publishedNode: string
 }
 
 type Step = 'lock' | 'units' | 'statistics'
 const STEPS: Step[] = ['lock', 'units', 'statistics']
 const STEP_LABEL: Record<Step, string> = {lock: 'lock hash', units: 'unit table hash', statistics: 'statistics'}
 
-// Full precision, so a difference in the last digits is visible rather than rounded away.
+// Integers, counts and verdicts must match exactly. Floating-point values must agree to a
+// stated relative tolerance: JavaScript leaves Math.exp / Math.log accuracy to each engine,
+// so a browser's V8 can differ from the Node build that produced the published numbers in
+// the last one or two of 17 significant digits. Bit-exact reproduction is checked in CI on
+// the same engine as the published run.
+const EXACT: (keyof FamilyResult)[] = ['n', 'excluded', 'statistic', 'verdict']
+const FLOAT: (keyof FamilyResult)[] = ['effect', 'ciLow', 'ciHigh', 'p', 'adjustedP']
+const TOLERANCE = 1e-12
+
 const show = (v: unknown) => (typeof v === 'number' ? (v === 0 ? '0 (underflow; < 1e-300)' : v.toPrecision(17)) : String(v))
 const relDiff = (a: unknown, b: unknown) =>
   typeof a === 'number' && typeof b === 'number' && a !== b ? Math.abs(a - b) / Math.max(Math.abs(a), Math.abs(b)) : 0
 
-export function Replicator({hypothesisId, published, committedNumbersSha256, trialIds}: Props) {
+interface Comparison {
+  exactOk: boolean
+  floatsOk: boolean
+  maxRel: number
+  bitIdentical: boolean
+}
+
+function compare(published: FamilyResult[], recomputed: FamilyResult[]): Comparison {
+  let exactOk = published.length === recomputed.length
+  let maxRel = 0
+  let bitIdentical = exactOk
+  for (const p of published) {
+    const r = recomputed.find((x) => x.hypothesisId === p.hypothesisId)
+    if (!r) {
+      exactOk = false
+      continue
+    }
+    for (const k of EXACT) if (p[k] !== r[k]) exactOk = false
+    if (JSON.stringify(p.counts) !== JSON.stringify(r.counts)) exactOk = false
+    for (const k of FLOAT) {
+      if (p[k] !== r[k]) bitIdentical = false
+      maxRel = Math.max(maxRel, relDiff(p[k], r[k]))
+    }
+  }
+  return {exactOk, floatsOk: maxRel <= TOLERANCE, maxRel, bitIdentical: bitIdentical && exactOk}
+}
+
+export function Replicator({hypothesisId, published, committedNumbersSha256, publishedNode}: Props) {
   const worker = useRef<Worker | null>(null)
   const [state, setState] = useState<'idle' | 'running' | 'done' | 'error'>('idle')
   const [progress, setProgress] = useState<Record<string, Partial<Record<Step, boolean>>>>({})
@@ -55,15 +90,18 @@ export function Replicator({hypothesisId, published, committedNumbersSha256, tri
     w.postMessage('start')
   }
 
+  const checksOk = Object.values(progress).every((s) => STEPS.every((k) => s[k] !== false))
+  const cmp = result ? compare(published, result.family) : null
+  const reproduced = Boolean(cmp && checksOk && cmp.exactOk && cmp.floatsOk)
   const mine = result?.family.find((r) => r.hypothesisId === hypothesisId)
-  const allMatch = mine ? COMPARED.every((k) => mine[k] === published[k]) : false
+  const pub = published.find((r) => r.hypothesisId === hypothesisId)
 
   return (
     <section aria-labelledby="replicate-run">
       <h2 id="replicate-run">Re-run it in your browser</h2>
       <p>
         Recomputes all six trials (the Holm correction needs the whole family) from the cached unit tables, with the same{' '}
-        <code>lab/stats.ts</code> code. Nothing is fetched: it works with the network down. Expect about 20 to 60 seconds.
+        <code>lab/stats.ts</code> code. Nothing is fetched: it works with the network down. Expect 20 to 90 seconds.
       </p>
       <button type="button" onClick={start} disabled={state === 'running'}>
         {state === 'running' ? 'Recomputing…' : state === 'idle' ? 'Replicate' : 'Run again'}
@@ -83,7 +121,7 @@ export function Replicator({hypothesisId, published, committedNumbersSha256, tri
             </tr>
           </thead>
           <tbody>
-            {trialIds.map((id) => (
+            {published.map(({hypothesisId: id}) => (
               <tr key={id}>
                 <th scope="row">{id}</th>
                 {STEPS.map((s) => {
@@ -102,52 +140,62 @@ export function Replicator({hypothesisId, published, committedNumbersSha256, tri
         </div>
       )}
 
-      {result && mine && (
-        <>
-          <div role="status" className={`banner ${allMatch && result.numbersSha256 === committedNumbersSha256 ? 'banner-notice' : 'banner-failure'}`}>
-            {allMatch && result.numbersSha256 === committedNumbersSha256 ? (
-              <>
-                <strong>Identical.</strong> Every number below matches the published result, and the hash of all six recomputed results equals
-                the hash committed before unblinding. Took {(result.ms / 1000).toFixed(1)} s.
-              </>
-            ) : (
-              <>
-                <strong>Differs.</strong> The recomputed numbers do not match the published ones.
-              </>
-            )}
-          </div>
-          <table>
-            <caption>Published vs recomputed: {hypothesisId}</caption>
-            <thead>
-              <tr>
-                <th scope="col">Quantity</th>
-                <th scope="col">Published</th>
-                <th scope="col">Recomputed now</th>
-                <th scope="col">Match</th>
+      {result && cmp && (
+        <div role="status" className={`banner ${reproduced ? 'banner-notice' : 'banner-failure'}`}>
+          {reproduced ? (
+            <>
+              <strong>Reproduced in your browser</strong> in {(result.ms / 1000).toFixed(1)} s. Across all six trials every lock hash, unit-table
+              hash, count and verdict is identical, and every floating-point value agrees with the published one to{' '}
+              {cmp.maxRel === 0 ? 'the last bit' : `within ${cmp.maxRel.toExponential(1)} relative (tolerance ${TOLERANCE})`}.
+              {!cmp.bitIdentical && (
+                <>
+                  {' '}
+                  Not bit-identical: JavaScript leaves <code>Math.exp</code>/<code>Math.log</code> accuracy to each engine, so your browser differs
+                  from {publishedNode} in the last digits. Bit-exact reproduction is checked by CI on the same engine as the published run.
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              <strong>Not reproduced.</strong> A hash, count or verdict differs, or a value differs by more than {TOLERANCE} relative (largest:{' '}
+              {cmp.maxRel.toExponential(1)}).
+            </>
+          )}
+        </div>
+      )}
+
+      {result && mine && pub && (
+        <table>
+          <caption>Published vs recomputed: {hypothesisId}</caption>
+          <thead>
+            <tr>
+              <th scope="col">Quantity</th>
+              <th scope="col">Published</th>
+              <th scope="col">Recomputed now</th>
+              <th scope="col">Match</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...EXACT, ...FLOAT].map((k) => (
+              <tr key={k}>
+                <th scope="row">{k}</th>
+                <td>{show(pub[k])}</td>
+                <td>{show(mine[k])}</td>
+                <td>{pub[k] === mine[k] ? '✓ identical' : `within ${relDiff(pub[k], mine[k]).toExponential(1)} relative`}</td>
               </tr>
-            </thead>
-            <tbody>
-              {COMPARED.map((k) => (
-                <tr key={k}>
-                  <th scope="row">{k}</th>
-                  <td>{show(published[k])}</td>
-                  <td>{show(mine[k])}</td>
-                  <td>{published[k] === mine[k] ? '✓ identical' : `differs by ${relDiff(published[k], mine[k]).toExponential(1)} (relative)`}</td>
-                </tr>
-              ))}
-              <tr>
-                <th scope="row">numbers SHA-256 (all six)</th>
-                <td>
-                  <code className="hash">{committedNumbersSha256}</code>
-                </td>
-                <td>
-                  <code className="hash">{result.numbersSha256}</code>
-                </td>
-                <td>{result.numbersSha256 === committedNumbersSha256 ? '✓' : '✗'}</td>
-              </tr>
-            </tbody>
-          </table>
-        </>
+            ))}
+            <tr>
+              <th scope="row">numbers SHA-256 (bit-exact, all six)</th>
+              <td>
+                <code className="hash">{committedNumbersSha256}</code>
+              </td>
+              <td>
+                <code className="hash">{result.numbersSha256}</code>
+              </td>
+              <td>{result.numbersSha256 === committedNumbersSha256 ? '✓ identical' : 'differs (engine-level last digits; see above)'}</td>
+            </tr>
+          </tbody>
+        </table>
       )}
     </section>
   )

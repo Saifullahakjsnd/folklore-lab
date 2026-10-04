@@ -1,0 +1,1251 @@
+{
+  "retrievedAt": "2026-10-03T23:58:10.973Z",
+  "location": {
+    "lat": 51.51,
+    "lon": -0.13
+  },
+  "moonElevation": [
+    {
+      "source": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27301%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40399%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27-0.13%2C51.51%2C0%27&START_TIME=%272024-01-25+18%3A00%27&STOP_TIME=%272024-01-26+06%3A00%27&STEP_SIZE=%271+h%27&QUANTITIES=%274%27&APPARENT=%27REFRACTED%27&TIME_ZONE=%27%2B00%3A00%27",
+      "apparent": "REFRACTED",
+      "rows": [
+        {
+          "utc": "2024-01-25T18:00:00Z",
+          "azimuthDeg": 71.505454,
+          "elevationDeg": 14.755963
+        },
+        {
+          "utc": "2024-01-25T19:00:00Z",
+          "azimuthDeg": 82.241458,
+          "elevationDeg": 23.453442
+        },
+        {
+          "utc": "2024-01-25T20:00:00Z",
+          "azimuthDeg": 93.551263,
+          "elevationDeg": 32.414334
+        },
+        {
+          "utc": "2024-01-25T21:00:00Z",
+          "azimuthDeg": 106.249085,
+          "elevationDeg": 41.268716
+        },
+        {
+          "utc": "2024-01-25T22:00:00Z",
+          "azimuthDeg": 121.555201,
+          "elevationDeg": 49.495084
+        },
+        {
+          "utc": "2024-01-25T23:00:00Z",
+          "azimuthDeg": 141.111178,
+          "elevationDeg": 56.24592
+        },
+        {
+          "utc": "2024-01-26T00:00:00Z",
+          "azimuthDeg": 165.918874,
+          "elevationDeg": 60.211897
+        },
+        {
+          "utc": "2024-01-26T01:00:00Z",
+          "azimuthDeg": 193.407248,
+          "elevationDeg": 60.112028
+        },
+        {
+          "utc": "2024-01-26T02:00:00Z",
+          "azimuthDeg": 218.037006,
+          "elevationDeg": 55.962445
+        },
+        {
+          "utc": "2024-01-26T03:00:00Z",
+          "azimuthDeg": 237.393026,
+          "elevationDeg": 49.046819
+        },
+        {
+          "utc": "2024-01-26T04:00:00Z",
+          "azimuthDeg": 252.540624,
+          "elevationDeg": 40.650604
+        },
+        {
+          "utc": "2024-01-26T05:00:00Z",
+          "azimuthDeg": 265.116283,
+          "elevationDeg": 31.600472
+        },
+        {
+          "utc": "2024-01-26T06:00:00Z",
+          "azimuthDeg": 276.329326,
+          "elevationDeg": 22.40491
+        }
+      ]
+    },
+    {
+      "source": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%27301%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40399%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27-0.13%2C51.51%2C0%27&START_TIME=%271965-06-15+00%3A00%27&STOP_TIME=%271965-06-16+00%3A00%27&STEP_SIZE=%271+h%27&QUANTITIES=%274%27&APPARENT=%27REFRACTED%27&TIME_ZONE=%27%2B00%3A00%27",
+      "apparent": "REFRACTED",
+      "rows": [
+        {
+          "utc": "1965-06-15T00:00:00Z",
+          "azimuthDeg": 169.537616,
+          "elevationDeg": 11.846759
+        },
+        {
+          "utc": "1965-06-15T01:00:00Z",
+          "azimuthDeg": 182.97154,
+          "elevationDeg": 12.4072
+        },
+        {
+          "utc": "1965-06-15T02:00:00Z",
+          "azimuthDeg": 196.296945,
+          "elevationDeg": 10.877011
+        },
+        {
+          "utc": "1965-06-15T03:00:00Z",
+          "azimuthDeg": 209.112306,
+          "elevationDeg": 7.399693
+        },
+        {
+          "utc": "1965-06-15T04:00:00Z",
+          "azimuthDeg": 221.188164,
+          "elevationDeg": 2.341707
+        },
+        {
+          "utc": "1965-06-15T05:00:00Z",
+          "azimuthDeg": 232.507764,
+          "elevationDeg": -3.878429
+        },
+        {
+          "utc": "1965-06-15T06:00:00Z",
+          "azimuthDeg": 243.23525,
+          "elevationDeg": -11.503664
+        },
+        {
+          "utc": "1965-06-15T07:00:00Z",
+          "azimuthDeg": 253.673379,
+          "elevationDeg": -19.854655
+        },
+        {
+          "utc": "1965-06-15T08:00:00Z",
+          "azimuthDeg": 264.256574,
+          "elevationDeg": -28.643243
+        },
+        {
+          "utc": "1965-06-15T09:00:00Z",
+          "azimuthDeg": 275.604972,
+          "elevationDeg": -37.575873
+        },
+        {
+          "utc": "1965-06-15T10:00:00Z",
+          "azimuthDeg": 288.66407,
+          "elevationDeg": -46.293059
+        },
+        {
+          "utc": "1965-06-15T11:00:00Z",
+          "azimuthDeg": 304.931096,
+          "elevationDeg": -54.247978
+        },
+        {
+          "utc": "1965-06-15T12:00:00Z",
+          "azimuthDeg": 326.4529,
+          "elevationDeg": -60.488944
+        },
+        {
+          "utc": "1965-06-15T13:00:00Z",
+          "azimuthDeg": 354.000847,
+          "elevationDeg": -63.531018
+        },
+        {
+          "utc": "1965-06-15T14:00:00Z",
+          "azimuthDeg": 23.029301,
+          "elevationDeg": -62.198707
+        },
+        {
+          "utc": "1965-06-15T15:00:00Z",
+          "azimuthDeg": 47.119138,
+          "elevationDeg": -57.054965
+        },
+        {
+          "utc": "1965-06-15T16:00:00Z",
+          "azimuthDeg": 65.261719,
+          "elevationDeg": -49.647733
+        },
+        {
+          "utc": "1965-06-15T17:00:00Z",
+          "azimuthDeg": 79.401587,
+          "elevationDeg": -41.156706
+        },
+        {
+          "utc": "1965-06-15T18:00:00Z",
+          "azimuthDeg": 91.304615,
+          "elevationDeg": -32.261651
+        },
+        {
+          "utc": "1965-06-15T19:00:00Z",
+          "azimuthDeg": 102.110567,
+          "elevationDeg": -23.378458
+        },
+        {
+          "utc": "1965-06-15T20:00:00Z",
+          "azimuthDeg": 112.548764,
+          "elevationDeg": -14.817761
+        },
+        {
+          "utc": "1965-06-15T21:00:00Z",
+          "azimuthDeg": 123.118045,
+          "elevationDeg": -6.865265
+        },
+        {
+          "utc": "1965-06-15T22:00:00Z",
+          "azimuthDeg": 134.172181,
+          "elevationDeg": 0.088447
+        },
+        {
+          "utc": "1965-06-15T23:00:00Z",
+          "azimuthDeg": 145.934899,
+          "elevationDeg": 5.494412
+        },
+        {
+          "utc": "1965-06-16T00:00:00Z",
+          "azimuthDeg": 158.467915,
+          "elevationDeg": 9.668963
+        }
+      ]
+    }
+  ],
+  "sunElevationAirless": [
+    {
+      "source": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40399%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27-0.13%2C51.51%2C0%27&START_TIME=%272024-06-21+19%3A50%27&STOP_TIME=%272024-06-21+20%3A50%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%27&APPARENT=%27AIRLESS%27&TIME_ZONE=%27%2B00%3A00%27",
+      "apparent": "AIRLESS",
+      "rows": [
+        {
+          "utc": "2024-06-21T19:50:00Z",
+          "azimuthDeg": 304.955622,
+          "elevationDeg": 3.046258
+        },
+        {
+          "utc": "2024-06-21T19:51:00Z",
+          "azimuthDeg": 305.146611,
+          "elevationDeg": 2.918897
+        },
+        {
+          "utc": "2024-06-21T19:52:00Z",
+          "azimuthDeg": 305.337778,
+          "elevationDeg": 2.791835
+        },
+        {
+          "utc": "2024-06-21T19:53:00Z",
+          "azimuthDeg": 305.529123,
+          "elevationDeg": 2.665073
+        },
+        {
+          "utc": "2024-06-21T19:54:00Z",
+          "azimuthDeg": 305.720649,
+          "elevationDeg": 2.538613
+        },
+        {
+          "utc": "2024-06-21T19:55:00Z",
+          "azimuthDeg": 305.912357,
+          "elevationDeg": 2.412457
+        },
+        {
+          "utc": "2024-06-21T19:56:00Z",
+          "azimuthDeg": 306.104248,
+          "elevationDeg": 2.286606
+        },
+        {
+          "utc": "2024-06-21T19:57:00Z",
+          "azimuthDeg": 306.296324,
+          "elevationDeg": 2.161063
+        },
+        {
+          "utc": "2024-06-21T19:58:00Z",
+          "azimuthDeg": 306.488586,
+          "elevationDeg": 2.035828
+        },
+        {
+          "utc": "2024-06-21T19:59:00Z",
+          "azimuthDeg": 306.681035,
+          "elevationDeg": 1.910904
+        },
+        {
+          "utc": "2024-06-21T20:00:00Z",
+          "azimuthDeg": 306.873672,
+          "elevationDeg": 1.786292
+        },
+        {
+          "utc": "2024-06-21T20:01:00Z",
+          "azimuthDeg": 307.0665,
+          "elevationDeg": 1.661994
+        },
+        {
+          "utc": "2024-06-21T20:02:00Z",
+          "azimuthDeg": 307.259519,
+          "elevationDeg": 1.538012
+        },
+        {
+          "utc": "2024-06-21T20:03:00Z",
+          "azimuthDeg": 307.45273,
+          "elevationDeg": 1.414348
+        },
+        {
+          "utc": "2024-06-21T20:04:00Z",
+          "azimuthDeg": 307.646135,
+          "elevationDeg": 1.291003
+        },
+        {
+          "utc": "2024-06-21T20:05:00Z",
+          "azimuthDeg": 307.839734,
+          "elevationDeg": 1.167978
+        },
+        {
+          "utc": "2024-06-21T20:06:00Z",
+          "azimuthDeg": 308.033531,
+          "elevationDeg": 1.045276
+        },
+        {
+          "utc": "2024-06-21T20:07:00Z",
+          "azimuthDeg": 308.227524,
+          "elevationDeg": 0.922899
+        },
+        {
+          "utc": "2024-06-21T20:08:00Z",
+          "azimuthDeg": 308.421717,
+          "elevationDeg": 0.800848
+        },
+        {
+          "utc": "2024-06-21T20:09:00Z",
+          "azimuthDeg": 308.616109,
+          "elevationDeg": 0.679124
+        },
+        {
+          "utc": "2024-06-21T20:10:00Z",
+          "azimuthDeg": 308.810702,
+          "elevationDeg": 0.55773
+        },
+        {
+          "utc": "2024-06-21T20:11:00Z",
+          "azimuthDeg": 309.005498,
+          "elevationDeg": 0.436668
+        },
+        {
+          "utc": "2024-06-21T20:12:00Z",
+          "azimuthDeg": 309.200497,
+          "elevationDeg": 0.315938
+        },
+        {
+          "utc": "2024-06-21T20:13:00Z",
+          "azimuthDeg": 309.395701,
+          "elevationDeg": 0.195544
+        },
+        {
+          "utc": "2024-06-21T20:14:00Z",
+          "azimuthDeg": 309.591111,
+          "elevationDeg": 0.075486
+        },
+        {
+          "utc": "2024-06-21T20:15:00Z",
+          "azimuthDeg": 309.786727,
+          "elevationDeg": -0.044234
+        },
+        {
+          "utc": "2024-06-21T20:16:00Z",
+          "azimuthDeg": 309.982552,
+          "elevationDeg": -0.163614
+        },
+        {
+          "utc": "2024-06-21T20:17:00Z",
+          "azimuthDeg": 310.178585,
+          "elevationDeg": -0.282652
+        },
+        {
+          "utc": "2024-06-21T20:18:00Z",
+          "azimuthDeg": 310.374829,
+          "elevationDeg": -0.401346
+        },
+        {
+          "utc": "2024-06-21T20:19:00Z",
+          "azimuthDeg": 310.571284,
+          "elevationDeg": -0.519695
+        },
+        {
+          "utc": "2024-06-21T20:20:00Z",
+          "azimuthDeg": 310.767952,
+          "elevationDeg": -0.637697
+        },
+        {
+          "utc": "2024-06-21T20:21:00Z",
+          "azimuthDeg": 310.964833,
+          "elevationDeg": -0.755349
+        },
+        {
+          "utc": "2024-06-21T20:22:00Z",
+          "azimuthDeg": 311.161928,
+          "elevationDeg": -0.872652
+        },
+        {
+          "utc": "2024-06-21T20:23:00Z",
+          "azimuthDeg": 311.359239,
+          "elevationDeg": -0.989601
+        },
+        {
+          "utc": "2024-06-21T20:24:00Z",
+          "azimuthDeg": 311.556767,
+          "elevationDeg": -1.106197
+        },
+        {
+          "utc": "2024-06-21T20:25:00Z",
+          "azimuthDeg": 311.754512,
+          "elevationDeg": -1.222437
+        },
+        {
+          "utc": "2024-06-21T20:26:00Z",
+          "azimuthDeg": 311.952475,
+          "elevationDeg": -1.338318
+        },
+        {
+          "utc": "2024-06-21T20:27:00Z",
+          "azimuthDeg": 312.150658,
+          "elevationDeg": -1.453841
+        },
+        {
+          "utc": "2024-06-21T20:28:00Z",
+          "azimuthDeg": 312.349061,
+          "elevationDeg": -1.569002
+        },
+        {
+          "utc": "2024-06-21T20:29:00Z",
+          "azimuthDeg": 312.547686,
+          "elevationDeg": -1.683799
+        },
+        {
+          "utc": "2024-06-21T20:30:00Z",
+          "azimuthDeg": 312.746533,
+          "elevationDeg": -1.798232
+        },
+        {
+          "utc": "2024-06-21T20:31:00Z",
+          "azimuthDeg": 312.945603,
+          "elevationDeg": -1.912299
+        },
+        {
+          "utc": "2024-06-21T20:32:00Z",
+          "azimuthDeg": 313.144898,
+          "elevationDeg": -2.025997
+        },
+        {
+          "utc": "2024-06-21T20:33:00Z",
+          "azimuthDeg": 313.344417,
+          "elevationDeg": -2.139324
+        },
+        {
+          "utc": "2024-06-21T20:34:00Z",
+          "azimuthDeg": 313.544162,
+          "elevationDeg": -2.25228
+        },
+        {
+          "utc": "2024-06-21T20:35:00Z",
+          "azimuthDeg": 313.744134,
+          "elevationDeg": -2.364861
+        },
+        {
+          "utc": "2024-06-21T20:36:00Z",
+          "azimuthDeg": 313.944333,
+          "elevationDeg": -2.477067
+        },
+        {
+          "utc": "2024-06-21T20:37:00Z",
+          "azimuthDeg": 314.144761,
+          "elevationDeg": -2.588896
+        },
+        {
+          "utc": "2024-06-21T20:38:00Z",
+          "azimuthDeg": 314.345418,
+          "elevationDeg": -2.700345
+        },
+        {
+          "utc": "2024-06-21T20:39:00Z",
+          "azimuthDeg": 314.546305,
+          "elevationDeg": -2.811413
+        },
+        {
+          "utc": "2024-06-21T20:40:00Z",
+          "azimuthDeg": 314.747423,
+          "elevationDeg": -2.922099
+        },
+        {
+          "utc": "2024-06-21T20:41:00Z",
+          "azimuthDeg": 314.948773,
+          "elevationDeg": -3.0324
+        },
+        {
+          "utc": "2024-06-21T20:42:00Z",
+          "azimuthDeg": 315.150355,
+          "elevationDeg": -3.142314
+        },
+        {
+          "utc": "2024-06-21T20:43:00Z",
+          "azimuthDeg": 315.352169,
+          "elevationDeg": -3.25184
+        },
+        {
+          "utc": "2024-06-21T20:44:00Z",
+          "azimuthDeg": 315.554218,
+          "elevationDeg": -3.360976
+        },
+        {
+          "utc": "2024-06-21T20:45:00Z",
+          "azimuthDeg": 315.756501,
+          "elevationDeg": -3.46972
+        },
+        {
+          "utc": "2024-06-21T20:46:00Z",
+          "azimuthDeg": 315.959019,
+          "elevationDeg": -3.57807
+        },
+        {
+          "utc": "2024-06-21T20:47:00Z",
+          "azimuthDeg": 316.161773,
+          "elevationDeg": -3.686025
+        },
+        {
+          "utc": "2024-06-21T20:48:00Z",
+          "azimuthDeg": 316.364763,
+          "elevationDeg": -3.793583
+        },
+        {
+          "utc": "2024-06-21T20:49:00Z",
+          "azimuthDeg": 316.567991,
+          "elevationDeg": -3.900741
+        },
+        {
+          "utc": "2024-06-21T20:50:00Z",
+          "azimuthDeg": 316.771456,
+          "elevationDeg": -4.007499
+        }
+      ]
+    },
+    {
+      "source": "https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND=%2710%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27coord%40399%27&COORD_TYPE=%27GEODETIC%27&SITE_COORD=%27-0.13%2C51.51%2C0%27&START_TIME=%271958-12-21+15%3A30%27&STOP_TIME=%271958-12-21+16%3A30%27&STEP_SIZE=%271+m%27&QUANTITIES=%274%27&APPARENT=%27AIRLESS%27&TIME_ZONE=%27%2B00%3A00%27",
+      "apparent": "AIRLESS",
+      "rows": [
+        {
+          "utc": "1958-12-21T15:30:00Z",
+          "azimuthDeg": 227.034803,
+          "elevationDeg": 1.912639
+        },
+        {
+          "utc": "1958-12-21T15:31:00Z",
+          "azimuthDeg": 227.233846,
+          "elevationDeg": 1.798631
+        },
+        {
+          "utc": "1958-12-21T15:32:00Z",
+          "azimuthDeg": 227.432665,
+          "elevationDeg": 1.684257
+        },
+        {
+          "utc": "1958-12-21T15:33:00Z",
+          "azimuthDeg": 227.631263,
+          "elevationDeg": 1.569518
+        },
+        {
+          "utc": "1958-12-21T15:34:00Z",
+          "azimuthDeg": 227.829639,
+          "elevationDeg": 1.454416
+        },
+        {
+          "utc": "1958-12-21T15:35:00Z",
+          "azimuthDeg": 228.027794,
+          "elevationDeg": 1.338953
+        },
+        {
+          "utc": "1958-12-21T15:36:00Z",
+          "azimuthDeg": 228.22573,
+          "elevationDeg": 1.22313
+        },
+        {
+          "utc": "1958-12-21T15:37:00Z",
+          "azimuthDeg": 228.423448,
+          "elevationDeg": 1.106949
+        },
+        {
+          "utc": "1958-12-21T15:38:00Z",
+          "azimuthDeg": 228.620948,
+          "elevationDeg": 0.990412
+        },
+        {
+          "utc": "1958-12-21T15:39:00Z",
+          "azimuthDeg": 228.818232,
+          "elevationDeg": 0.873521
+        },
+        {
+          "utc": "1958-12-21T15:40:00Z",
+          "azimuthDeg": 229.015301,
+          "elevationDeg": 0.756278
+        },
+        {
+          "utc": "1958-12-21T15:41:00Z",
+          "azimuthDeg": 229.212154,
+          "elevationDeg": 0.638684
+        },
+        {
+          "utc": "1958-12-21T15:42:00Z",
+          "azimuthDeg": 229.408795,
+          "elevationDeg": 0.520741
+        },
+        {
+          "utc": "1958-12-21T15:43:00Z",
+          "azimuthDeg": 229.605223,
+          "elevationDeg": 0.402451
+        },
+        {
+          "utc": "1958-12-21T15:44:00Z",
+          "azimuthDeg": 229.80144,
+          "elevationDeg": 0.283816
+        },
+        {
+          "utc": "1958-12-21T15:45:00Z",
+          "azimuthDeg": 229.997446,
+          "elevationDeg": 0.164837
+        },
+        {
+          "utc": "1958-12-21T15:46:00Z",
+          "azimuthDeg": 230.193244,
+          "elevationDeg": 0.045516
+        },
+        {
+          "utc": "1958-12-21T15:47:00Z",
+          "azimuthDeg": 230.388833,
+          "elevationDeg": -0.074145
+        },
+        {
+          "utc": "1958-12-21T15:48:00Z",
+          "azimuthDeg": 230.584216,
+          "elevationDeg": -0.194144
+        },
+        {
+          "utc": "1958-12-21T15:49:00Z",
+          "azimuthDeg": 230.779393,
+          "elevationDeg": -0.31448
+        },
+        {
+          "utc": "1958-12-21T15:50:00Z",
+          "azimuthDeg": 230.974365,
+          "elevationDeg": -0.435151
+        },
+        {
+          "utc": "1958-12-21T15:51:00Z",
+          "azimuthDeg": 231.169134,
+          "elevationDeg": -0.556155
+        },
+        {
+          "utc": "1958-12-21T15:52:00Z",
+          "azimuthDeg": 231.3637,
+          "elevationDeg": -0.67749
+        },
+        {
+          "utc": "1958-12-21T15:53:00Z",
+          "azimuthDeg": 231.558065,
+          "elevationDeg": -0.799154
+        },
+        {
+          "utc": "1958-12-21T15:54:00Z",
+          "azimuthDeg": 231.752231,
+          "elevationDeg": -0.921147
+        },
+        {
+          "utc": "1958-12-21T15:55:00Z",
+          "azimuthDeg": 231.946197,
+          "elevationDeg": -1.043466
+        },
+        {
+          "utc": "1958-12-21T15:56:00Z",
+          "azimuthDeg": 232.139967,
+          "elevationDeg": -1.166109
+        },
+        {
+          "utc": "1958-12-21T15:57:00Z",
+          "azimuthDeg": 232.33354,
+          "elevationDeg": -1.289074
+        },
+        {
+          "utc": "1958-12-21T15:58:00Z",
+          "azimuthDeg": 232.526917,
+          "elevationDeg": -1.412361
+        },
+        {
+          "utc": "1958-12-21T15:59:00Z",
+          "azimuthDeg": 232.720102,
+          "elevationDeg": -1.535967
+        },
+        {
+          "utc": "1958-12-21T16:00:00Z",
+          "azimuthDeg": 232.913093,
+          "elevationDeg": -1.65989
+        },
+        {
+          "utc": "1958-12-21T16:01:00Z",
+          "azimuthDeg": 233.105894,
+          "elevationDeg": -1.784129
+        },
+        {
+          "utc": "1958-12-21T16:02:00Z",
+          "azimuthDeg": 233.298504,
+          "elevationDeg": -1.908683
+        },
+        {
+          "utc": "1958-12-21T16:03:00Z",
+          "azimuthDeg": 233.490926,
+          "elevationDeg": -2.033548
+        },
+        {
+          "utc": "1958-12-21T16:04:00Z",
+          "azimuthDeg": 233.683161,
+          "elevationDeg": -2.158724
+        },
+        {
+          "utc": "1958-12-21T16:05:00Z",
+          "azimuthDeg": 233.875209,
+          "elevationDeg": -2.284209
+        },
+        {
+          "utc": "1958-12-21T16:06:00Z",
+          "azimuthDeg": 234.067073,
+          "elevationDeg": -2.410001
+        },
+        {
+          "utc": "1958-12-21T16:07:00Z",
+          "azimuthDeg": 234.258754,
+          "elevationDeg": -2.536099
+        },
+        {
+          "utc": "1958-12-21T16:08:00Z",
+          "azimuthDeg": 234.450253,
+          "elevationDeg": -2.6625
+        },
+        {
+          "utc": "1958-12-21T16:09:00Z",
+          "azimuthDeg": 234.641571,
+          "elevationDeg": -2.789204
+        },
+        {
+          "utc": "1958-12-21T16:10:00Z",
+          "azimuthDeg": 234.83271,
+          "elevationDeg": -2.916208
+        },
+        {
+          "utc": "1958-12-21T16:11:00Z",
+          "azimuthDeg": 235.023672,
+          "elevationDeg": -3.043511
+        },
+        {
+          "utc": "1958-12-21T16:12:00Z",
+          "azimuthDeg": 235.214457,
+          "elevationDeg": -3.17111
+        },
+        {
+          "utc": "1958-12-21T16:13:00Z",
+          "azimuthDeg": 235.405067,
+          "elevationDeg": -3.299005
+        },
+        {
+          "utc": "1958-12-21T16:14:00Z",
+          "azimuthDeg": 235.595504,
+          "elevationDeg": -3.427194
+        },
+        {
+          "utc": "1958-12-21T16:15:00Z",
+          "azimuthDeg": 235.785768,
+          "elevationDeg": -3.555675
+        },
+        {
+          "utc": "1958-12-21T16:16:00Z",
+          "azimuthDeg": 235.975862,
+          "elevationDeg": -3.684445
+        },
+        {
+          "utc": "1958-12-21T16:17:00Z",
+          "azimuthDeg": 236.165787,
+          "elevationDeg": -3.813505
+        },
+        {
+          "utc": "1958-12-21T16:18:00Z",
+          "azimuthDeg": 236.355544,
+          "elevationDeg": -3.942851
+        },
+        {
+          "utc": "1958-12-21T16:19:00Z",
+          "azimuthDeg": 236.545135,
+          "elevationDeg": -4.072483
+        },
+        {
+          "utc": "1958-12-21T16:20:00Z",
+          "azimuthDeg": 236.734562,
+          "elevationDeg": -4.202398
+        },
+        {
+          "utc": "1958-12-21T16:21:00Z",
+          "azimuthDeg": 236.923825,
+          "elevationDeg": -4.332595
+        },
+        {
+          "utc": "1958-12-21T16:22:00Z",
+          "azimuthDeg": 237.112927,
+          "elevationDeg": -4.463073
+        },
+        {
+          "utc": "1958-12-21T16:23:00Z",
+          "azimuthDeg": 237.301868,
+          "elevationDeg": -4.593829
+        },
+        {
+          "utc": "1958-12-21T16:24:00Z",
+          "azimuthDeg": 237.490651,
+          "elevationDeg": -4.724862
+        },
+        {
+          "utc": "1958-12-21T16:25:00Z",
+          "azimuthDeg": 237.679277,
+          "elevationDeg": -4.85617
+        },
+        {
+          "utc": "1958-12-21T16:26:00Z",
+          "azimuthDeg": 237.867748,
+          "elevationDeg": -4.987752
+        },
+        {
+          "utc": "1958-12-21T16:27:00Z",
+          "azimuthDeg": 238.056065,
+          "elevationDeg": -5.119606
+        },
+        {
+          "utc": "1958-12-21T16:28:00Z",
+          "azimuthDeg": 238.244229,
+          "elevationDeg": -5.25173
+        },
+        {
+          "utc": "1958-12-21T16:29:00Z",
+          "azimuthDeg": 238.432243,
+          "elevationDeg": -5.384123
+        },
+        {
+          "utc": "1958-12-21T16:30:00Z",
+          "azimuthDeg": 238.620108,
+          "elevationDeg": -5.516783
+        }
+      ]
+    }
+  ],
+  "moonPhases": [
+    {
+      "source": "https://eclipse.gsfc.nasa.gov/phase/phases2001.html",
+      "timeScale": "Universal Time (UT)",
+      "year": 2024,
+      "phases": [
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-01-04T03:30:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-01-11T11:57:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-01-18T03:53:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-01-25T17:54:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-02-02T23:18:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-02-09T22:59:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-02-16T15:01:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-02-24T12:30:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-03-03T15:24:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-03-10T09:00:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-03-17T04:11:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-03-25T07:00:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-04-02T03:15:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-04-08T18:21:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-04-15T19:13:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-04-23T23:49:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-05-01T11:27:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-05-08T03:22:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-05-15T11:48:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-05-23T13:53:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-05-30T17:13:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-06-06T12:38:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-06-14T05:18:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-06-22T01:08:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-06-28T21:53:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-07-05T22:57:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-07-13T22:49:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-07-21T10:17:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-07-28T02:51:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-08-04T11:13:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-08-12T15:19:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-08-19T18:26:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-08-26T09:26:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-09-03T01:55:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-09-11T06:06:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-09-18T02:34:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-09-24T18:50:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-10-02T18:49:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-10-10T18:55:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-10-17T11:26:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-10-24T08:03:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-11-01T12:47:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-11-09T05:56:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-11-15T21:29:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-11-23T01:28:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-12-01T06:21:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "2024-12-08T15:27:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "2024-12-15T09:02:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "2024-12-22T22:18:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "2024-12-30T22:27:00Z"
+        }
+      ]
+    },
+    {
+      "source": "https://eclipse.gsfc.nasa.gov/phase/phases1901.html",
+      "timeScale": "Universal Time (UT)",
+      "year": 1965,
+      "phases": [
+        {
+          "phase": "new",
+          "utc": "1965-01-02T21:07:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-01-10T20:59:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-01-17T13:37:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-01-24T11:07:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-02-01T16:36:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-02-09T08:53:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-02-16T00:27:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-02-23T05:39:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-03-03T09:56:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-03-10T17:52:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-03-17T11:24:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-03-25T01:37:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-04-02T00:20:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-04-09T00:40:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-04-15T23:02:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-04-23T21:07:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-05-01T11:56:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-05-08T06:19:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-05-15T11:52:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-05-23T14:40:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-05-30T21:12:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-06-06T12:11:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-06-14T01:59:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-06-22T05:36:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-06-29T04:52:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-07-05T19:36:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-07-13T17:01:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-07-21T17:53:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-07-28T11:45:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-08-04T05:47:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-08-12T08:22:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-08-20T03:50:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-08-26T18:50:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-09-02T19:27:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-09-10T23:32:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-09-18T11:58:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-09-25T03:18:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-10-02T12:37:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-10-10T14:14:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-10-17T19:00:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-10-24T14:11:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-11-01T08:26:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-11-09T04:15:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-11-16T01:54:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-11-23T04:10:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-12-01T05:24:00Z"
+        },
+        {
+          "phase": "full",
+          "utc": "1965-12-08T17:21:00Z"
+        },
+        {
+          "phase": "lastQuarter",
+          "utc": "1965-12-15T09:52:00Z"
+        },
+        {
+          "phase": "new",
+          "utc": "1965-12-22T21:03:00Z"
+        },
+        {
+          "phase": "firstQuarter",
+          "utc": "1965-12-31T01:46:00Z"
+        }
+      ]
+    }
+  ]
+}

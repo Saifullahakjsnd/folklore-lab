@@ -261,3 +261,55 @@ Tests: 11 offline, using a fake clock and a fake Open-Meteo:
 **Mutation check:** I removed the rate-limit wait (the limits test failed), then made a 429 retry instead of stopping (two tests failed). Both were restored. The tests actually guard the behaviour.
 
 A dry run against the real locks gave 32 chunks and 7,826.9 estimated units. No network was touched.
+
+---
+
+## 2026-10-04 — Session 1 (cont.): time zones and astronomy, tested against primary sources
+
+### Where the model got stuck: suncalc 2.x is not suncalc 1.x
+
+I wrote `astronomy.ts` from memory of suncalc 1.x: radians, default export, `@types/suncalc`. The installed **suncalc 2.1.0**, the version named in the locks, differs on all three counts:
+- **altitudes are in degrees**, refraction-corrected, and the moon's is also parallax-corrected;
+- it has named ESM exports;
+- it ships its own types (`@types/suncalc` describes 1.x and was removed);
+- `getTimes` takes an optional `utcOffset`. Without it, it uses the solar day nearest the given instant, which is what the lock intends (12:00 local).
+
+Caught by reading `index.d.ts` and the source before running anything.
+
+**Consequence for a lock:** H6 (`hypothesis-ring-around-the-moon-v1`) writes the moon-altitude threshold as `> 0` with units `radians`. Under 2.1.0 the value is in degrees. Because the threshold is zero, the predicate gives identical results in either unit, so no number changes. The lock text is still factually wrong, and I have raised it in docs/REPORT.md as a judgement call: a documented erratum, or a formal deviation and v2.
+
+### Where the model got stuck: "winter is GMT" is false for 1968–71
+
+The IANA tz source (`github.com/eggert/tz`, file `europe`) has Europe/London on UTC+1 all year from 1968-10-27 to 1971-10-31 ("British Standard Time"). Three winters of H1's 05:00–07:00 window sit an hour earlier in UTC than a naive rule would put them. All local-time conversion goes through `Intl` with the tz database, and a test pins the 1970 case.
+
+### Time rules as code (`lab/src/time.ts`)
+
+- `localToUtc(date, 'HH:MM', tz)` **throws** for a wall time that does not exist (spring-forward gap) or occurs twice (fall-back). A locked window can never land silently on an ambiguous hour.
+- `localDay` gives 23, 24 or 25 hours. `accumulationStamps(a, b)` returns stamps with a < t ≤ b, matching Open-Meteo's preceding-hour sums. `nearestHour` rounds half past up.
+- Tests:
+  - H1 window = stamps 06:00 and 07:00 local;
+  - H6 night = 5 instants (4 on the spring-forward night, 6 on the fall-back night);
+  - New York and London DST days;
+  - leap days;
+  - the 1968–71 case.
+
+### Astronomy checked against JPL and NASA, not memory
+
+`lab/scripts/build-astro-fixtures.ts` fetched reference values into `lab/test/fixtures/astronomy.json`, storing each source query and the retrieval time:
+- JPL Horizons topocentric elevations over London (moon refracted; sun airless) for 2024 and 1965 / 1958;
+- NASA GSFC moon phase instants (UT) for 2024 and 1965.
+
+The USNO API was unreachable from this machine (connection failure).
+
+Measured agreement of suncalc 2.1.0:
+
+| Check | Agreement |
+| --- | --- |
+| Moon altitude, above +5° | within 0.005° (2024 and 1965) |
+| Moon altitude, near or below the horizon | within 0.17°; same sign everywhere outside ±0.25° |
+| Sunset vs Horizons' −0.833° crossing | 1.8 s (2024-06-21), 1.2 s (1958-12-21) |
+| Illumination at NASA full / new / quarter instants | ≥ 0.998 / ≤ 0.002 / 0.501 |
+
+**A test failed, and the test was wrong.** In 1965 the moon was off by 0.17° even at large *negative* elevations. Horizons applies no refraction below the horizon, while suncalc keeps its near-horizon term. The tight tolerance now applies only above +5°. H6 uses only the sign of the altitude, and the sign agrees.
+
+Tests: lab 29 pass, ingest 11 pass.

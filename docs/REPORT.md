@@ -45,3 +45,26 @@ Next (unblocked, starting now):
 1. lab time and astronomy utilities with DST and moon tests.
 2. lab/stats.ts with reference fixtures.
 3. Studio schema for the content model.
+
+## 2026-10-04T00:05Z — agent
+STATE: time and astronomy layer done and tested against JPL Horizons and NASA; weather fetch still not started.
+BLOCKED_ON: owner — (1) repo visibility before the fetch (still private, API 404); (2) ruling on the H6 units erratum below.
+
+Done since 23:50Z:
+- lab/src/time.ts: IANA-based local/UTC conversion that refuses nonexistent or ambiguous wall times; local days of 23/24/25 hours; locked-window helpers.
+- lab/src/astronomy.ts: suncalc 2.1.0 wrappers. suncalc agrees with JPL within 0.005 deg (moon above 5 deg) and within 2 s (sunset).
+- Fixtures with source queries: lab/test/fixtures/astronomy.json.
+- Tests: lab 29, ingest 11, all pass.
+
+Judgement call needed — H6 units erratum:
+- The locked H6 says the moon-altitude threshold is "> 0 radians". suncalc 2.1.0 (the version the lock names) reports degrees.
+- With a zero threshold, the predicate is identical in either unit, so no result can change.
+- Option A (my recommendation): record it as an erratum in the build log and the post. No new version. The hash stays.
+- Option B: file deviation 002 and lock H6 v2 with "degrees". Cleaner on paper, but a second deviation for a change with no computational effect.
+- Either way it is disclosed. I will not touch H6 until you rule.
+
+Findings worth sharing with the other builds:
+- Europe/London was UTC+1 all year from 1968-10-27 to 1971-10-31 (tzdata). Any "winter = GMT" shortcut is wrong for those winters.
+- suncalc 2.x returns degrees, not radians, has named exports and bundles its own types. @types/suncalc is for 1.x.
+
+Next (unblocked): lab/stats.ts (Fisher, Mann-Whitney, binomial, Holm, block bootstrap, seeded PRNG) with reference fixtures.

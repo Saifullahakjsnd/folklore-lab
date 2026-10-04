@@ -178,3 +178,9 @@ BLOCKED_ON: owner, one action the design requires of a person: say "unblind". Th
 Meanwhile (unblocked): GitHub release with the raw chunks, the Studio schema deploy, and /replicate.
 
 Note on the gate (item 6 of your list): I will not gate on the id namespace. In this project our robot token's engine id starts "g-" (entry 01:50Z; evidence in docs/BUILD_LOG.md), so a namespace gate admits robots as people. The gate is a named-curator allowlist via `$assigned`, plus a server-side check that uses Sanity's provider field. It meets the same goal (people only, never the agent), without the hole.
+
+## 2026-10-04T14:50Z — agent
+STATE: snapshot complete and published as release snapshot-era5-hourly-1950-2024-v1 (32 assets, restore tested from scratch). Six trials run blinded, committed by hash. Studio schema deployed (1/1). Locks imported earlier (26 docs, anonymous reads OK).
+BLOCKED_ON: owner — (1) "unblind" (a person's step by design); (2) machine memory is at 489 MB available, so I have paused heavy work (Studio deploy, Next builds, full test runs) until there is headroom.
+
+Remaining after unblind: import trials and verdicts; /replicate; CI reproduction; Lab Bench; post; shot list. The workflow deploy needs your `sanity login` (I will ask at that step).

@@ -93,3 +93,17 @@ Done since 00:10Z:
 - F34 noted. Event history will live in arrays inside documents, not one document per event.
 
 Next: Studio schema for the content model; then the fetch, as soon as the repo is public.
+
+## 2026-10-04T00:45Z — agent
+STATE: Studio schema built (typecheck + sanity build pass); import file of the locks ready; nothing imported or deployed to Sanity yet.
+BLOCKED_ON: owner — a second visibility decision. The production dataset's ACL mode is PUBLIC (checked with the project API). Importing the locks therefore publishes them immediately, the same trade-off as making the repo public. Say "import" and I will import, deploy the schema and deploy the Studio. Repo visibility still blocks the fetch.
+
+Done:
+- F33 checked: no approval gate existed anywhere, so nothing fake was built. The Studio Lock action refuses robot tokens by id prefix "p-", never $actor.kind. Server-side enforcement comes with the API routes.
+- H6 erratum recorded as Option A (00:22Z entry, lab/errata/).
+- Studio schema: 10 types; pre-registration as data. hypothesis.definition is the hashed JSON, and the document is read-only once locked. preregistration, deviation, erratum, dataSnapshot and trial are append-only (no delete, unpublish or duplicate). Verdict validation requires the trial's hash to match its preregistration and the outcome to equal the code's computed verdict.
+- F34 applied: snapshot chunks and trial stage history are arrays inside one document each. About 40 documents in total.
+- Import file: studio/import/preregistration.ndjson, built by lab/scripts/build-sanity-import.ts. 26 documents, no dotted ids, every definition re-hashed against its lock before writing.
+- Dataset today holds only 12 system documents (checked by id and type; none are ours).
+
+Next (unblocked): the Workflows spike on the in-memory test bench (needs no org enablement). The person-only approval gate will use the actor-id namespace, as F33 says.

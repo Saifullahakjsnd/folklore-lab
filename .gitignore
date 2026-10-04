@@ -40,3 +40,4 @@ ingest/data/raw/
 *.tsbuildinfo
 ingest/data/results/
 ingest/data/fetch-run.log
+ingest/data/groundhog/*.html

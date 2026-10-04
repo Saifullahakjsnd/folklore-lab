@@ -461,3 +461,14 @@ The engine's `fetchActor` (read in `@sanity/workflow-engine` 0.36.0 `dist/index.
 - GitHub's own push records hold the times the lock commits reached GitHub (2026-10-03, about 22:07Z onward).
 
 The owner's pre-flight secret scan before going public found only false positives: sha512 integrity lines in `pnpm-lock.yaml`. No `.env` file was ever committed.
+
+---
+
+## 2026-10-04 — H5's predictor: Punxsutawney Phil's record
+
+- `groundhog.org` returns 403 to every scripted request. In Chrome it showed a bot-detection "security verification" page that did not clear by itself. **I did not complete or bypass the bot check**; I closed the tab and asked the owner.
+- The owner saved the page from their own browser: "History & Past Predictions - Punxsutawney Groundhog Club" (canonical `https://www.groundhog.org/groundhog-day/history-past-predictions/`). Saved 2026-10-04T12:33:49Z; page SHA-256 `295be64d838f39123f519c1d91cdc7bb78deded1e2627b21c7e2832a8e0a38a6`; 1,296,018 bytes.
+- **The page is the Club's content, so it is not committed.** `ingest/data/groundhog/groundhog-calls.json` holds only the extracted facts (year → call) with that provenance. `ingest/scripts/parse-groundhog.ts` regenerates it from the saved page.
+- Mapping (as locked): "More winter" = shadow, "Early spring" = no shadow. Anything else is kept verbatim and excluded by the locked rule. "—No prediction." appears on the page but not in 1950–2024.
+- **1950–2024: 75 of 75 years have a call** (58 shadow, 17 no shadow). These are predictor counts only; no outcome has been looked at.
+- **Cross-check:** each call is compared with its row's details text. 69 of 75 match automatically (0 disagreements). The other 6 phrase it differently: 2021–2023 "Shadow at 7:2x AM", and 2001, 2014, 2015 "six more weeks of winter". By reading, all six agree with their parsed call (shadow).

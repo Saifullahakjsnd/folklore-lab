@@ -51,7 +51,7 @@ beforeAll(async () => {
     ),
     groundhogCalls: calls,
   }
-})
+}, 300_000) // builds four synthetic 75-year hourly series
 
 const entry = (slot: string) => {
   const e = registry.active.find((x) => slotOf(x.hypothesis._id) === slot)

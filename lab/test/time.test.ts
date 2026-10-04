@@ -116,7 +116,7 @@ describe('transition table agrees with Intl', () => {
         expect(utcOffset(t, tz)).toBe(intlUtcOffset(t, tz))
         expect(localParts(t, tz)).toEqual(intlLocalParts(t, tz))
       }
-    })
+    }, 300_000) // 20,000+ slow Intl reference calls
   }
 
   test('London has transitions in 1950-2024 but none between Oct 1968 and Oct 1971', () => {

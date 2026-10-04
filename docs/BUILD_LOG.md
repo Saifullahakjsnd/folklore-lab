@@ -348,3 +348,30 @@ Tests: lab 29 pass, ingest 11 pass.
 Unrecorded detail now fixed in code before any data: the PRNG draw order. The circular bootstrap draws block starts in order. The stratified bootstrap fills group 0 then group 1 from one generator. Committed before the fetch.
 
 Tests: lab 46, ingest 11.
+
+---
+
+## 2026-10-04 — Session 1 (cont.): the trial runner, and the time zones bite twice more
+
+`lab/src/trials.ts` implements the six operational definitions literally and runs them through `stats.ts`:
+- **It refuses** unless the hypothesis still matches its lock. The message ends: "file a deviation instead".
+- **It asserts the lock's structure** (comparators, windows, units, period, test name) against what the code implements, and reads every threshold from the lock. An edited lock can never be silently computed some other way. A test locks a variant with `<=` in place of `<` and confirms the runner refuses it.
+- `finaliseFamily` applies Holm across all six slots, then the locked verdict rules.
+
+Tested on **synthetic series only**: 57 lab tests, including the six real locks run end to end with B = 10,000.
+
+### Where the model got stuck (time zones, again)
+
+1. **"02:00" did not exist in 1950.** Running H6 over synthetic data threw `1950-04-16 02:00 does not exist in Europe/London`. Until 1980, UK clocks sprang forward at 02:00 GMT, not 01:00. My code converted the wall time "02:00 local" to UTC. **The lock was right and the code was wrong:** the lock defines the night as *instants whose local time lies in 22:00–02:00*, which needs neither endpoint to exist. The fix, `instantsWithLocalTimeBetween`, works on instants. A test pins the 1950 night (instants at 22, 23, 00 and 01 local). Converting a wall time to UTC raises an error on gaps and overlaps, which is why this surfaced instead of silently shifting an hour.
+2. **Speed.** `Intl` costs about 14 µs per call, and a 75-year trial makes millions of lookups. `time.ts` now scans 1940–2030 once per zone, pins every offset change to the minute, and answers lookups from that table. `Intl` remains the reference: a test compares the table with `Intl` at 20,000 random instants per zone and ±3 h around every transition. London has more than 140 transitions in 1950–2024, and none between Oct 1968 and Oct 1971.
+
+### Where the model got stuck (my own claims)
+
+- **I quoted a false floating-point example.** I wrote that `0.7 + 0.1 + 0.2 === 0.9999999999999999`; it evaluates to exactly `1`. A test caught it. I then searched by computation: `0.2 + 0.7 + 0.1` gives `0.9999999999999999`, and that is the example now in the code and test. The underlying trap is real: a day with exactly 1.0 mm could fail "≥ 1 mm". So precipitation is held and summed in **integer tenths of a millimetre**. That is exact decimal arithmetic at Open-Meteo's stored precision, not a change of rule.
+- **I wrote one test with the wrong expectation.** Under 1970's BST, the stamp 06:00 UTC covers 06:00–07:00 local, which is *inside* `[05:00, 07:00)`. The test was wrong, not the code. Corrected with a stamp that is genuinely outside.
+
+### Erratum (not a deviation): H6 moon-altitude units
+
+The owner ruled Option A (GUIDANCE 00:18Z). `lab/errata/erratum-ring-around-the-moon-v1-001.json` records that H6 labels the moon-altitude threshold "radians", while suncalc 2.1.0 reports degrees.
+
+**Why it is not a deviation:** the threshold is 0 and the comparator is `>`, so the predicate is identical in either unit, and no count, p-value or verdict can change. Deviation 001 was different in kind: unhashed coordinates *could* have changed results. Keeping that line sharp matters more than paper tidiness. The runner asserts the locked threshold is exactly 0, so the erratum's claim is enforced in code.

@@ -1,0 +1,14 @@
+{
+  "_id": "erratum-ring-around-the-moon-v1-001",
+  "_type": "erratum",
+  "hypothesisId": "hypothesis-ring-around-the-moon-v1",
+  "field": "predictor.conditions[variable = 'moon altitude'].units",
+  "locked": "radians",
+  "correct": "degrees",
+  "why": "suncalc 2.1.0, the version the lock names, reports getMoonPosition().altitude in degrees (its index.d.ts: 'All angles are in degrees').",
+  "effect": "None. The threshold is 0 and the comparator is '>', so the predicate is identical in either unit. The runner asserts the locked threshold is exactly 0.",
+  "whyNotADeviation": "A deviation records a change that could alter a result (deviation 001: unhashed coordinates). This label cannot change any count, p-value or verdict. Filing a deviation for it would dilute what a deviation means, so it is disclosed as an erratum and the locked hash is unchanged.",
+  "ruledBy": "project owner via docs/GUIDANCE.md, 2026-10-04T00:18Z (Option A)",
+  "recordedAt": "2026-10-04T00:22:00Z",
+  "dataSeenBeforeErratum": false
+}

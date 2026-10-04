@@ -36,3 +36,42 @@ Path Two only — Workflows and App SDK:
 
 **F16 Workflows are at 0.36.0** in lockstep: `@sanity/workflow-engine`, `@sanity/workflow-cli` (binary `sanity-workflows`), `@sanity/workflow-studio-plugin`, `@sanity/workflow-engine-test`. **`@sanity/workflows` does not exist** — the spec package names were partly wrong.
 **F17 Workflows and Dashboard need org-level enablement**, separately per org. `0 studios detected` is expected until a Studio is deployed. Ask when you need them.
+
+## 2026-10-04T00:18Z - guidance
+
+Cross-build findings added since the last guidance - do not rediscover these:
+
+**F34 Workflow instances are documents, and events-as-documents blows the document cap.**
+pothole-shelter is at 10,022 documents against a 10,000 cap, with `statusEvent` alone at 4,992.
+Keep event history as an **array inside the parent document**, not one document per event - the
+choice best-track made for 6-hourly fixes. Count documents before designing a per-event type.
+
+**F35 Pin TypeScript 6.0.3** - not 5.x, not 7.0.2. TS 7 ships no JS API and typescript-eslint
+supports only below 6.1. This supersedes my earlier advice to drop to 5.x.
+
+**Trial expiry (F5) is still unknown.** Three of you asked. Your tokens cannot read it - it needs
+`sanity.organization/read`. It is with the owner; I will paste it here when I have it. Do not
+block on it.
+
+**URGENT - check your approval gate now. See F33.**
+
+pothole-shelter probed Workflows 0.36.0 on the bench: **`$actor.kind == "person"` gates nothing.**
+The engine stamps every resolved actor as `kind: "person"`, including robot tokens and an actor
+passed as `agent`. Its person-only gate let agents and robots approve.
+
+Your spec requires a Workflow where an agent moves a draft forward and **a person approves**. If
+your gate uses `$actor.kind`, that approval is fake. The working discriminator is the id
+namespace: `g...` = account user, `p-...` = robot token, so
+`!string::startsWith($actor.id, "p-")`. Do not use GROQ `match` - it tokenizes text. And it stays
+advisory: guards are engine-side and optimistic, so the server route must enforce it too.
+
+**H6 units erratum: Option A - erratum, no new version, hash unchanged.**
+The predicate is mathematically identical at a zero threshold, so no result can change. Filing a
+deviation for a change with no computational effect would dilute the mechanism: deviation 001 was
+substantive, because unhashed coordinates could have altered results. Keeping that distinction
+sharp is worth more than paper tidiness. Disclose it as an erratum in the build log and the post,
+and say explicitly why it is not a deviation - that reasoning is itself good evidence of rigour.
+
+Repo visibility sits with the owner and is the only thing blocking the fetch.
+
+Your timezone and suncalc findings are now F36 and F37.

@@ -75,3 +75,27 @@ and say explicitly why it is not a deviation - that reasoning is itself good evi
 Repo visibility sits with the owner and is the only thing blocking the fetch.
 
 Your timezone and suncalc findings are now F36 and F37.
+
+## 2026-10-04T07:46Z - guidance
+
+**The repo is PUBLIC. You are unblocked. Start the fetch.**
+
+github.com/Saifullahakjsnd/folklore-lab is now public. The lock commit 78b647e and deviation 001
+are publicly timestamped and predate any weather data, so the pre-registration claim is now
+independently verifiable rather than asserted. Verify it reads as public yourself before the first
+request, as you planned.
+
+Pre-flight done on my side before flipping visibility: every committed blob was scanned for
+credential patterns. The only hits were 24 sha512 integrity lines across 4 revisions of
+pnpm-lock.yaml, all false positives. No .env file was ever committed, only the template.
+
+Record in the build log and the post: the repo went public at 2026-10-04T07:46Z UTC, before the first
+Open-Meteo request, and state that the lock commit timestamp is therefore third-party verifiable.
+That sentence is the whole value of doing it this way.
+
+Then run the fetch with the safeguards already built: per-chunk checksums, temp-file-then-rename,
+manifest only after all 32 chunks verify, no blind retry on 429, resume by checksum, refuse on any
+lock hash mismatch. If the real weighted total exceeds your 7,830 estimate, stop and report.
+
+After the fetch: trials, then the Studio schema, then the journal. Also still open from the last
+guidance - check your Workflow approval gate against F33 before you build the verdict workflow.

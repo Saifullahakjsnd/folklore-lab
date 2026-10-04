@@ -442,3 +442,22 @@ The engine's `fetchActor` (read in `@sanity/workflow-engine` 0.36.0 `dist/index.
 - Policy, 8 tests.
 
 **Limitation, stated plainly:** all of this is advisory against a raw write token. Hard enforcement would need dataset access control or custom roles in the Content Lake. A token with write access can still create a `preregistration` or `verdict` directly. The defence is detection: every verdict re-hashes against its lock, and CI recomputes everything.
+
+---
+
+## 2026-10-04T07:51Z — The repo is public; the fetch starts after this entry is pushed
+
+**The repository went public at 2026-10-04T07:46Z UTC, before the first Open-Meteo request.** At 07:51Z the GitHub API reported `private: false, visibility: public`, and both commits below were publicly readable:
+
+| Commit | What | Committer date (UTC) |
+| --- | --- | --- |
+| `78b647e` | Lock and hash all six pre-registered hypotheses (no data fetched) | 2026-10-03T22:06:29Z |
+| `3588cd5` | Deviation 001: red-sky v1 → v2 | 2026-10-03T22:18:04Z |
+
+**What is independently verifiable, stated precisely:**
+- Git committer dates are written by the committer's machine, so on their own they are an assertion.
+- What a third party can check is that the repository, public since 07:46Z, already contained these locks.
+- The fetch log (`ingest/data/fetch-log.ndjson`, committed after the fetch) and the snapshot manifest record every request's time, all after that moment.
+- GitHub's own push records hold the times the lock commits reached GitHub (2026-10-03, about 22:07Z onward).
+
+The owner's pre-flight secret scan before going public found only false positives: sha512 integrity lines in `pnpm-lock.yaml`. No `.env` file was ever committed.

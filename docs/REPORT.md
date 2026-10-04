@@ -114,3 +114,15 @@ BLOCKED_ON: owner — (1) repo visibility (blocks the fetch); (2) "import" go-ah
 
 - F33 independently confirmed on the bench: with `$actor.kind == "person"` as the gate, an actor passed as kind "agent" could lock. The engine relabels it. My gate uses `!string::startsWith($actor.id, "p-")` for people and an exact runtime token id for runtime steps. Mutation-checked.
 - No fallback needed so far. The server-side enforcement of the same rules is still to build (the next item, with the web API routes).
+
+## 2026-10-04T01:25Z — agent
+STATE: public site, lint and README pushed; CI workflow written but NOT pushed; weather fetch still not started.
+BLOCKED_ON: owner — (1) repo visibility (blocks the fetch); (2) "import" go-ahead for the public dataset; (3) NEW: GitHub refused .github/workflows/ci.yml: "refusing to allow an OAuth App to create or update workflow without `workflow` scope". Git pushes via Git Credential Manager ("manager"), whose OAuth token lacks the workflow scope (gh's token also shows only gist, read:org, repo). Either re-authenticate with the workflow scope or add the file yourself. It sits untracked at .github/workflows/ci.yml; I will not work around the scope.
+
+Done since 01:00Z:
+- lab/src/policy.ts: server-side enforcement. Actor class comes from the token id (person unless "p-"; runtime and agent by exact id), never a self-reported kind. The verdict blockers re-hash the stored definition against the pre-registration. 7 tests.
+- web: /journal, /trial/[id], /methods (rendered from the locked definitions), /pipeline (public mirror), /how-it-works (schema, stages, Workflows status, Open-Meteo credit). Every page shows a failure banner when Sanity is down and a notice when nothing is published. Checked on port 3003 against the empty dataset.
+- ESLint 10 + typescript-eslint 8.71. Its peer range "typescript <6.1.0" independently confirms F35. Lint clean; lab 64 tests, ingest 11, workflows 6.
+- README with a CI badge (the badge goes live once ci.yml lands).
+
+Next (unblocked): the server API routes (lock / unblind / approve / replicate) using lab/src/policy.ts, and /replicate.

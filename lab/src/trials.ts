@@ -9,7 +9,7 @@ import {moonAltitudeDeg, moonFraction, sunsetHour} from './astronomy.ts'
 import {checkLock, type PreregistrationLock} from './preregistration.ts'
 import type {Hypothesis} from './registry.ts'
 import {at, maxOf, mmToTenths, sumTenths, type PointSeries} from './series.ts'
-import {binomTest, circularBlockBootstrap, fisherExact, holm, mannWhitneyU, stratifiedBootstrap, verdict, type Verdict} from './stats.ts'
+import {binomTest, circularBlockBootstrapCounts, fisherExact, holm, mannWhitneyU, stratifiedBootstrap, verdict, type Verdict} from './stats.ts'
 import {accumulationStamps, addDays, DAY_MS, hourInstants, instantsWithLocalTimeBetween, localDay, localToUtc} from './time.ts'
 
 export class TrialRefused extends Error {}
@@ -109,18 +109,17 @@ function analyseRate(h: Hypothesis, units: RateUnits, base: Pick<TrialResult, 'h
   expectLock(obj(h.effect, 'effect').units, 'percentage points', 'effect.units')
   expectLock(obj(h.test, 'test').name, "Fisher's exact test", 'test.name')
   const n = units.predictor.length
+  // Each unit's 2x2 cell, precomputed: 0 excluded, 1 a, 2 b, 3 c, 4 d. Counting codes into a
+  // typed array gives exactly the same integers as branching per unit, several times faster.
+  const cell = new Uint8Array(n)
+  for (let i = 0; i < n; i++) {
+    cell[i] = units.excluded[i] ? 0 : units.predictor[i] ? (units.outcome[i] ? 1 : 2) : units.outcome[i] ? 3 : 4
+  }
+  const tallies = new Int32Array(5)
   const tally = (indices: ArrayLike<number>) => {
-    let a = 0, b = 0, c = 0, d = 0
-    for (let k = 0; k < indices.length; k++) {
-      const i = indices[k]!
-      if (units.excluded[i]) continue
-      if (units.predictor[i]) {
-        if (units.outcome[i]) a++
-        else b++
-      } else if (units.outcome[i]) c++
-      else d++
-    }
-    return {a, b, c, d}
+    tallies.fill(0)
+    for (let k = 0; k < indices.length; k++) tallies[cell[indices[k]!]!]!++
+    return {a: tallies[1]!, b: tallies[2]!, c: tallies[3]!, d: tallies[4]!}
   }
   const effectOf = ({a, b, c, d}: {a: number; b: number; c: number; d: number}) =>
     a + b === 0 ? null : 100 * (a / (a + b) - (a + c) / (a + b + c + d))
@@ -128,12 +127,13 @@ function analyseRate(h: Hypothesis, units: RateUnits, base: Pick<TrialResult, 'h
   const counts = tally(all)
   const effect = effectOf(counts)
   if (effect === null) throw new TrialRefused(`${h._id}: no unit has the predictor`)
-  const boot = circularBlockBootstrap(
-    n,
+  const boot = circularBlockBootstrapCounts(
+    cell,
+    5,
     num(bootstrap.blockLength, 'bootstrap.blockLength'),
     num(bootstrap.resamples, 'bootstrap.resamples'),
     num(obj(bootstrap.prng, 'bootstrap.prng').seed, 'seed'),
-    (idx) => effectOf(tally(idx)),
+    (t) => effectOf({a: t[1]!, b: t[2]!, c: t[3]!, d: t[4]!}),
   )
   return {
     ...base,

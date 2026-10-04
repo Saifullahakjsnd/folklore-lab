@@ -5,6 +5,7 @@ import ref from './fixtures/stats.json' with {type: 'json'}
 import {
   binomTest,
   circularBlockBootstrap,
+  circularBlockBootstrapCounts,
   fisherExact,
   holm,
   lgamma,
@@ -120,5 +121,25 @@ describe('locked verdict rules', () => {
     expect(verdict({...g, adjustedP: 0.2, effect: 40, ciHigh: 52})).toBe('Not supported')
     expect(verdict({...g, adjustedP: 0.04, effect: 36, ciHigh: 47})).toBe('Contradicted')
     expect(verdict({...g, adjustedP: 0.5, effect: 55, ciHigh: 66})).toBe('Inconclusive')
+  })
+})
+
+describe('prefix-sum block bootstrap', () => {
+  test('gives bit-identical results to the generic circular block bootstrap', () => {
+    for (const [n, L, seed] of [[1000, 7, 20261004], [1003, 7, 1], [50, 7, 9], [27394, 7, 3]] as const) {
+      const rng = mulberry32(seed + 1)
+      const codes = Uint8Array.from({length: n}, () => Math.floor(rng() * 5))
+      const effect = (c: ArrayLike<number>) => {
+        const [a, b, cc, d] = [c[1]!, c[2]!, c[3]!, c[4]!]
+        return a + b === 0 ? null : 100 * (a / (a + b) - (a + cc) / (a + b + cc + d))
+      }
+      const generic = circularBlockBootstrap(n, L, 300, seed, (idx) => {
+        const t = new Int32Array(5)
+        for (const i of idx) t[codes[i]!]!++
+        return effect(t)
+      })
+      const fast = circularBlockBootstrapCounts(codes, 5, L, 300, seed, effect)
+      expect(fast).toEqual(generic)
+    }
   })
 })

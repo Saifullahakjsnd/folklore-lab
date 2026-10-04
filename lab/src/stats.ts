@@ -199,6 +199,55 @@ export function circularBlockBootstrap(
 }
 
 /**
+ * The same circular block bootstrap, specialised for statistics that depend only on how many
+ * resampled units fall in each category (e.g. the cells of a 2x2 table). It draws the
+ * identical random sequence and covers the identical units as `circularBlockBootstrap`
+ * (ceil(n / L) block starts, L consecutive units each, wrapping, truncated to n), but counts
+ * each block with prefix sums in O(categories) instead of touching every unit.
+ * `codes[i]` is unit i's category, 0..categories-1.
+ */
+export function circularBlockBootstrapCounts(
+  codes: Uint8Array,
+  categories: number,
+  blockLength: number,
+  resamples: number,
+  seed: number,
+  statistic: (counts: Int32Array) => number | null,
+): BootstrapResult {
+  const n = codes.length
+  // prefix[c * (2n + 1) + i] = units of category c among the first i units of the series doubled,
+  // so a wrapping block [s, s + len) is one subtraction.
+  const stride = 2 * n + 1
+  const prefix = new Int32Array(categories * stride)
+  for (let c = 0; c < categories; c++) {
+    let run = 0
+    for (let i = 0; i < 2 * n; i++) {
+      if (codes[i % n] === c) run++
+      prefix[c * stride + i + 1] = run
+    }
+  }
+  const rng = mulberry32(seed)
+  const blocks = Math.ceil(n / blockLength)
+  const counts = new Int32Array(categories)
+  const effects: number[] = []
+  let undefinedResamples = 0
+  for (let b = 0; b < resamples; b++) {
+    counts.fill(0)
+    let remaining = n
+    for (let j = 0; j < blocks; j++) {
+      const start = Math.floor(rng() * n)
+      const len = Math.min(blockLength, remaining)
+      remaining -= len
+      for (let c = 0; c < categories; c++) counts[c]! += prefix[c * stride + start + len]! - prefix[c * stride + start]!
+    }
+    const e = statistic(counts)
+    if (e === null || !Number.isFinite(e)) undefinedResamples++
+    else effects.push(e)
+  }
+  return summarise(effects, undefinedResamples)
+}
+
+/**
  * Stratified bootstrap: each group is resampled with replacement within itself (group sizes
  * fixed). Groups are drawn in the order given, every index from the same generator.
  */

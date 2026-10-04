@@ -144,3 +144,15 @@ STATE: fetch -> load path complete and tested offline (lab/src/snapshot.ts verif
 BLOCKED_ON: owner — unchanged: (1) repo visibility (blocks the fetch); (2) "import" go-ahead; (3) workflow scope for ci.yml. Later: curator ids to allowlist, separate runtime and agent tokens, Workflows and Dashboard org toggles.
 
 Once the repo is public, the remaining sequence is mechanical: fetch (about 2.25 h) -> upload raw chunks as release assets -> load and verify -> run the six trials -> Holm and verdicts (blinded until a curator unblinds) -> import.
+
+## 2026-10-04T08:30Z — agent
+STATE: fetch STARTED at 07:52:16Z and was STOPPED by Claude Code at about 07:54Z because the machine ran critically low on memory (a host-side stop, not a fetch error). 2 of 32 chunks saved and verified; no manifest; resumable.
+BLOCKED_ON: owner — say "resume fetch" (ideally after freeing memory on the machine). Claude Code's notice says not to restart it unprompted, so I have not.
+
+State on disk (checked):
+- Saved and checksum-verified: London 1950-59 (87,648 h) and 1960-69 (87,672 h). ERA5 cell 51.5, -0.25. Zero nulls in all 7 variables.
+- Requests sent: 3, all HTTP 200. The third (London 1970-79) was answered, but the process was stopped before writing it. No .tmp left behind. No manifest, so no partial snapshot can be mistaken for a complete one.
+- Weight spent so far: 782.6 (estimated). Resuming refetches the lost chunk, so today's total becomes about 8,088, against the 7,827 estimate. That is still under my 9,500 self-cap and Open-Meteo's 10,000/day. The overrun is my one wasted request, not Open-Meteo weighting things differently: every response so far matched the expected shape.
+- Resume is one command: `node ingest/scripts/fetch.ts`. It re-verifies the saved chunks by checksum, skips them, and carries the rolling rate ledger over from ingest/data/fetch-log.ndjson.
+
+Also done: lab/scripts/run-trials.ts (blinded; results to a gitignored file, only their SHA-256 printed). Next unblocked: Phil's call record for H5. groundhog.org blocks scripted requests (403), so I am reading the public page in Chrome.

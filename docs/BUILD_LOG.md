@@ -505,3 +505,9 @@ Committed: `ingest/data/manifest.json` (every chunk's query URL, retrieval time,
 - **Nobody has seen a number.** The script writes results to a gitignored file and prints only which trials ran and a hash.
 - **Commitment:** `lab/results/blinded-commitment.json` publishes `numbersSha256 = 28df6c2f…`, the SHA-256 of the canonical JSON of all six results. It is pushed before unblinding, so the published numbers can be checked against a value fixed in advance.
 - **Determinism, shown blind:** a second full run gave the identical `numbersSha256`.
+
+## 2026-10-04 — Raw chunks published as a GitHub release
+
+- Release `snapshot-era5-hourly-1950-2024-v1`: 32 assets (117.7 MB), with the Open-Meteo / C3S ERA5 attribution in its notes. Only `ingest/data/manifest.json` (checksums) is in git.
+- The snapshot manifest is hashed, so download URLs are not written into it. Release asset URLs are deterministic (`…/releases/download/<tag>/<file>`).
+- `node ingest/scripts/download-snapshot.ts [dir]` restores and verifies every chunk. **Tested from scratch:** 32 downloads in 53 s, all SHA-256 matching the committed manifest, and the loader rebuilt 657,456 contiguous hours per point.

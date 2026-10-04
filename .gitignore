@@ -38,3 +38,5 @@ ingest/data/raw/
 
 # typescript incremental
 *.tsbuildinfo
+ingest/data/results/
+ingest/data/fetch-run.log

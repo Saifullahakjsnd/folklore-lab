@@ -472,3 +472,10 @@ The owner's pre-flight secret scan before going public found only false positive
 - Mapping (as locked): "More winter" = shadow, "Early spring" = no shadow. Anything else is kept verbatim and excluded by the locked rule. "—No prediction." appears on the page but not in 1950–2024.
 - **1950–2024: 75 of 75 years have a call** (58 shadow, 17 no shadow). These are predictor counts only; no outcome has been looked at.
 - **Cross-check:** each call is compared with its row's details text. 69 of 75 match automatically (0 disagreements). The other 6 phrase it differently: 2021–2023 "Shadow at 7:2x AM", and 2001, 2014, 2015 "six more weeks of winter". By reading, all six agree with their parsed call (shadow).
+
+---
+
+## 2026-10-04T13:00Z — Locks imported to the public dataset
+
+- 26 documents (6 proverbs, 4 locations, 7 hypotheses including the superseded red-sky v1, 7 pre-registrations, 1 deviation, 1 erratum) imported into `production` with `createIfNotExists`, so nothing already present can be overwritten. This went through the HTTP mutate API (`lab/scripts/import-to-sanity.ts`) with the Editor token (F3), and ran while the fetch was rate-limit idle. Result: 26 created.
+- **Anonymous (token-free) reads return all 26.** Recomputing each hypothesis's hash from the definition *as stored in Sanity* matches its pre-registration for all 7, so anyone can re-derive the locks from the public dataset alone.

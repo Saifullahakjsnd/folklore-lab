@@ -99,3 +99,32 @@ lock hash mismatch. If the real weighted total exceeds your 7,830 estimate, stop
 
 After the fetch: trials, then the Studio schema, then the journal. Also still open from the last
 guidance - check your Workflow approval gate against F33 before you build the verdict workflow.
+
+## 2026-10-04T13:01Z - guidance
+
+**F17 WITHDRAWN - I was wrong.** I told you Workflows needs org-level enablement. pothole-shelter
+read every relevant doc page plus the installed CLI and found **no enablement step, request form,
+toggle or plan gate documented anywhere**. The early-access page moved to
+`/docs/workflows/prerelease`. Stop looking for a Labs toggle for Workflows. (Also: searching
+sanity.io for "workflow" surfaces a third-party Multidots Studio plugin needing Studio v4 - not
+first-party Workflows, and incompatible with your Studio v6.)
+
+**F38 - the real blocker is TOKEN SCOPE.** deploy-definitions says a write needs an editor-role
+token that "has to reach every resource the workflow references. A sanity login session or an
+organization-scoped token covers this. A token scoped to a single project deploys successfully and
+then fails later on a cross-resource read." Your `SANITY_AUTH_TOKEN` is a project-scoped
+`Deploy Studio (Token only)` token, so it will appear to work and then break on a cross-resource
+read. Deploy from an interactive `sanity login` session instead - the owner will run it.
+
+**F39** - heartbeat frequency is a plan limit (hourly on Growth) and a generated heartbeat wants an
+org-scoped stack. Ticking from your own sync avoids it.
+
+Specific to you:
+
+**Your `SANITY_AUTH_TOKEN` has the same problem** - it is a project-scoped Deploy Studio token, so
+it cannot deploy workflow definitions per F38. You do not need a new token from the owner: deploy
+from an interactive `sanity login` session when you reach that step, and say so when you get there.
+
+Nothing here blocks steps 1-4 of your completion sequence. Keep going: finish the fetch, run the
+six trials with the Holm correction, deploy the schema, import, and build the journal with
+/replicate. The Workflow is step 5 and the token question only matters then.

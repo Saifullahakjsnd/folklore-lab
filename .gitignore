@@ -44,3 +44,5 @@ ingest/data/groundhog/*.html
 ingest/data/failed/
 .vercel
 .sanity-cli/
+docs/media/clips/
+docs/media/video/

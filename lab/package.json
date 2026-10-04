@@ -9,7 +9,8 @@
     "./preregistration": "./src/preregistration.ts",
     "./stats": "./src/stats.ts",
     "./policy": "./src/policy.ts",
-    "./trials": "./src/trials.ts"
+    "./trials": "./src/trials.ts",
+    "./approval": "./src/approval.ts"
   },
   "scripts": {
     "typecheck": "tsc -p .",

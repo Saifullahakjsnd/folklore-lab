@@ -587,3 +587,31 @@ The first version of the page said "Differs", which is true bit for bit but misl
 - **Fix:** `@sanity/cli-core` reads `SANITY_CLI_CONFIG_PATH` (`getCliUserConfigPath`), so this project's login lives in `folklore-lab/.sanity-cli/config.json` (gitignored, excluded from Vercel). The agent started `sanity login --provider github --no-open`, and the owner signed in from a private window. Verified before use: org `omdlbkvbu`, project `1jioj3uy`, human account id; the sibling's session untouched.
 - `sanity-workflows deploy`: a dry run first (one new definition, nothing else touched), then **created `trial-lifecycle` v1** in `1jioj3uy.production`. This is the F38 step the project-scoped token could not do.
 - **Lab Bench deployed** to the Sanity Dashboard ("Folklore Lab Bench"). So **the Dashboard is enabled for the org**; no toggle needed.
+
+---
+
+## 2026-10-05 — Server-side enforcement: POST /api/verdicts/approve
+
+Workflow guards and Studio checks are advisory: a write token can bypass them. The journal's API route is where the rule holds:
+
+- **Who:** the caller is identified by Sanity's `/users/me` for **their own** token, never by a request field.
+  - Robots are recognised by Sanity's `provider: "sanity-token"`.
+  - People must be on the curator allowlist (`FOLKLORE_CURATOR_IDS`, currently the owner only).
+  - The runtime and agent are matched by exact id.
+- **What:**
+  - the hypothesis must still hash to its pre-registration;
+  - the trial must have run on that hash and be unblinded;
+  - the verdict is the one the locked rules computed;
+  - one verdict per trial.
+- The verdict is written with a server-held token (a Vercel encrypted env var) that never reaches a browser.
+- **Decision logic** lives in `lab/src/approval.ts`. Tests: a curator on a clean trial is allowed; the agent, the runtime, unknown robots, a robot borrowing a curator's id, and a non-curator person get 403; an edited hypothesis or a different outcome gets 409.
+- **Live refusal checks on production:**
+  - no token → 401;
+  - **the robot runtime token → 403** ("runtime may not approve-verdict: only a named curator may approve a verdict");
+  - a garbage token → 401;
+  - a malformed trial id → 400;
+  - the CORS preflight from the Dashboard origin is allowed.
+  The agent did not test the success path: approving with the owner's token would make the agent the curator. Verdicts in the dataset: **0**, so approval is the owner's action.
+- The **Lab Bench's Approve button now calls this route** with the signed-in user's own session token.
+
+**Limitation, stated plainly:** the Studio's Approve action still writes directly with the signed-in user's token, and anyone holding a write token can write a `verdict` document straight to the Content Lake. Enforcement that holds against *every* client would need dataset-level access control. The defence for those paths is detection: every verdict validates against the trial's hash and computed verdict, and CI recomputes everything.

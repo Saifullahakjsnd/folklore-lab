@@ -1,6 +1,6 @@
 import {canonicalize} from '@folklore/lab/canonical'
 import {sha256Hex} from '@folklore/lab/hash'
-import {useClient, useCurrentUser, useQuery} from '@sanity/sdk-react'
+import {useAuthToken, useCurrentUser, useQuery} from '@sanity/sdk-react'
 import {useEffect, useState} from 'react'
 
 interface DetailData {
@@ -38,8 +38,8 @@ const fmtP = (p: number) => (p === 0 ? '< 1e-300' : p < 0.001 ? p.toExponential(
 
 export function Detail({hypothesisId}: {hypothesisId: string}) {
   const {data} = useQuery<DetailData | null>({query: QUERY, params: {id: hypothesisId}})
-  const client = useClient({apiVersion: '2026-06-09'})
   const user = useCurrentUser()
+  const token = useAuthToken()
   const [recomputed, setRecomputed] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
@@ -58,23 +58,26 @@ export function Detail({hypothesisId}: {hypothesisId: string}) {
   const trial = data.trial
   const canApprove = Boolean(trial && trial.stage === 'unblinded' && !trial.blinded && !data.verdict && lockMatches && trial.lockSha256 === data.prereg?.sha256 && user)
 
+  // Approval goes through the server, which identifies you from your own token, checks the
+  // curator allowlist and the lock hash, and writes the verdict with a server-held token.
   const approve = async () => {
-    if (!trial || !user || !canApprove) return
+    if (!trial || !canApprove) return
+    if (!token) {
+      setMessage('No session token is available in this app; approve from the Studio instead.')
+      return
+    }
     setBusy(true)
     setMessage(null)
-    const now = new Date().toISOString()
-    const approver = `${user.name} (${user.id})`
     try {
-      await client
-        .transaction()
-        .create({_id: `verdict-${data._id}`, _type: 'verdict', trial: {_type: 'reference', _ref: trial._id}, outcome: trial.computedVerdict, approvedBy: approver, approvedAt: now})
-        .patch(trial._id, (p) =>
-          p.set({stage: 'verdictApproved'}).append('stageHistory', [{_key: `approve-${Date.now()}`, _type: 'transition', from: 'unblinded', to: 'verdictApproved', at: now, by: approver, actorKind: 'person'}]),
-        )
-        .commit()
-      setMessage(`Approved: ${trial.computedVerdict}`)
+      const res = await fetch('https://folklore-lab.vercel.app/api/verdicts/approve', {
+        method: 'POST',
+        headers: {Authorization: `Bearer ${token}`, 'Content-Type': 'application/json'},
+        body: JSON.stringify({trialId: trial._id}),
+      })
+      const body = (await res.json()) as {ok: boolean; outcome?: string; reasons?: string[]}
+      setMessage(body.ok ? `Approved by the server: ${body.outcome}` : `Refused (HTTP ${res.status}): ${(body.reasons ?? []).join('; ')}`)
     } catch (error) {
-      setMessage(`Approval failed: ${(error as Error).message}`)
+      setMessage(`Approval request failed: ${(error as Error).message}`)
     } finally {
       setBusy(false)
     }

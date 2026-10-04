@@ -3,7 +3,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./canonical": "./src/canonical.ts",
+    "./hash": "./src/hash.ts",
+    "./preregistration": "./src/preregistration.ts",
+    "./stats": "./src/stats.ts"
   },
   "scripts": {
     "typecheck": "tsc -p .",
